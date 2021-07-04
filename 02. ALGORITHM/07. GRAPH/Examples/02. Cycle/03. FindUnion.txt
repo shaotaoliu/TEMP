@@ -1,0 +1,68 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 3
+
+// find the subset of an element i
+int find(int parent[], int i)
+{
+    if (parent[i] == -1)
+    {
+        return i;
+    }
+
+    return find(parent, parent[i]);
+}
+
+// do union of two subsets
+void Union(int parent[], int x, int y)
+{
+    int xset = find(parent, x);
+    int yset = find(parent, y);
+
+    if (xset != yset)
+    {
+        parent[xset] = yset;
+    }
+}
+
+bool has_cycle(vector<pair<int, int>> vec)
+{
+    int parent[V];
+    memset(parent, -1, sizeof(int) * V);
+
+    for (vector<pair<int, int>>::iterator it = vec.begin(); it != vec.end(); ++it)
+    {
+        int x = find(parent, it->first);
+        int y = find(parent, it->second);
+
+        if (x == y)
+        {
+            return true;
+        }
+
+        parent[x] = y;           // Union(parent, x, y);
+    }
+
+    return false;
+}
+
+int main()
+{
+    vector<pair<int, int>> v;
+    v.push_back({0, 1});
+    v.push_back({1, 2});
+    v.push_back({0, 2});
+
+    bool b = has_cycle(v);
+    cout << (b ? "Yes" : "No");
+    return 0;
+}
+
+/*
+
+*/

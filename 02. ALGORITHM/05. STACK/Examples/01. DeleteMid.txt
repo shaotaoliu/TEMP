@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void printStack(stack<char> &s)
+{
+    while (!s.empty())
+    {
+        char c = s.top();
+        s.pop();
+        cout << c << " ";
+    }
+}
+
+void deleteMid(stack<char> &s, int n, int curr = 0)
+{
+    if (s.empty())
+    {
+        return;
+    }
+
+    char t = s.top();
+    s.pop();
+
+    if (n / 2 == curr)
+    {
+        return;
+    }
+
+    deleteMid(s, n, curr + 1);
+    s.push(t);
+}
+
+int main()
+{
+    stack<char> st;
+
+    st.push('1');
+    st.push('2');
+    st.push('3');
+    st.push('4');
+    st.push('5');
+    st.push('6');
+    st.push('7');
+
+    deleteMid(st, st.size());
+    printStack(st);
+}
+
+/*
+
+7 6 5 3 2 1
+
+*/

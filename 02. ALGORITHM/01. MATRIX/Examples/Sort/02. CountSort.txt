@@ -1,0 +1,70 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void countSort(int a[], int n)
+{
+    int maxx = a[0];
+    int minx = a[0];
+
+    // find the maximum and minimum values:
+    for (int i = 1; i < n; ++i)
+    {
+        maxx = max(maxx, a[i]);
+        minx = min(minx, a[i]);
+    }
+
+    int range = maxx - minx + 1;
+    int freq[range] = {0};
+
+    // count the frequency of the elements:
+    for (int i = 0; i < n; ++i)
+    {
+        freq[a[i] - minx]++;
+    }
+
+    for (int i = 1; i < range; ++i)
+    {
+        freq[i] += freq[i-1];
+    }
+
+    // build the output array:
+    int temp[n];
+
+    for (int i = n-1; i >= 0; --i)
+    {
+        int index = a[i] - minx;            // the position of a[i] in freq[]
+        temp[freq[index] - 1] = a[i];
+        freq[index]--;
+    }
+
+    // copy back to original array:
+    for (int i = 0; i < n; ++i)
+    {
+        a[i] = temp[i];
+    }
+}
+
+void printArray(int a[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i] << ", ";
+    }
+
+    cout << endl;
+}
+
+int main()
+{
+    int a[] = {-5, -10, 0, -3, 8, 5, -1, 10, 0, -5, 5};
+    int n = sizeof(a) / sizeof(a[0]);
+
+    countSort(a, n);
+    printArray(a, n);
+}
+
+/*
+
+-10, -5, -5, -3, -1, 0, 0, 5, 5, 8, 10
+
+*/

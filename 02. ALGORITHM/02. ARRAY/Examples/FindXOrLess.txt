@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+
+int findXOrLess(int a[], int n, int x)
+{
+    if (x < a[0])
+    {
+        return -1;
+    }
+
+    if (x > a[n - 1])
+    {
+        return a[n - 1];
+    }
+
+    int low = 0;
+    int high = n - 1;
+
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+        if (a[mid] == x || (x > a[mid] && x < a[mid + 1]))
+        {
+            return a[mid];
+        }
+        else if (a[mid] > x)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            low = mid + 1;
+        }
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int a[] = {3, 6, 9, 12, 15, 20, 25, 30};
+    int n = sizeof(a) / sizeof(int);
+
+    cout << findXOrLess(a, n, 1) << endl;
+    cout << findXOrLess(a, n, 3) << endl;
+    cout << findXOrLess(a, n, 4) << endl;
+    cout << findXOrLess(a, n, 6) << endl;
+    cout << findXOrLess(a, n, 7) << endl;
+    cout << findXOrLess(a, n, 9) << endl;
+    cout << findXOrLess(a, n, 11) << endl;
+    cout << findXOrLess(a, n, 12) << endl;
+    cout << findXOrLess(a, n, 13) << endl;
+    cout << findXOrLess(a, n, 15) << endl;
+    cout << findXOrLess(a, n, 16) << endl;
+    cout << findXOrLess(a, n, 20) << endl;
+    cout << findXOrLess(a, n, 22) << endl;
+    cout << findXOrLess(a, n, 25) << endl;
+    cout << findXOrLess(a, n, 28) << endl;
+    cout << findXOrLess(a, n, 30) << endl;
+    cout << findXOrLess(a, n, 31) << endl;
+}

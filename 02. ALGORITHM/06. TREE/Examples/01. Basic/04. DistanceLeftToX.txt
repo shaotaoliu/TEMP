@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node
+{
+    int data;
+    struct Node* left, *right;
+};
+
+Node* newNode(int data)
+{
+    Node* temp = new Node;
+    temp->data = data;
+    temp->left = temp->right = NULL;
+    return (temp);
+}
+
+int minHeight(Node *root)
+{
+    if (root == NULL)
+    {
+        return INT_MAX;
+    }
+
+    if (root->left == NULL && root->right == NULL)
+    {
+        return 0;
+    }
+
+    return min(minHeight(root->left), minHeight(root->right)) + 1;
+}
+
+int minDistance(Node *root, Node *x, int parent = INT_MAX)
+{
+    if (root == NULL)
+    {
+        return -1;
+    }
+
+    int dist = minHeight(root);
+    if (parent != INT_MAX)
+    {
+        dist = min(dist, parent + 1);
+    }
+
+    if (root == x)
+    {
+        return dist;
+    }
+
+    int val = minDistance(root->left, x, dist);
+    if (val == -1)
+    {
+        val = minDistance(root->right, x, dist);
+    }
+
+    return val;
+}
+
+int main ()
+{
+    Node *root  = newNode(1);
+    root->left  = newNode(12);
+    root->right = newNode(13);
+
+    root->right->left   = newNode(14);
+    root->right->right  = newNode(15);
+
+    root->right->left->left   = newNode(21);
+    root->right->left->right  = newNode(22);
+    root->right->right->left  = newNode(23);
+    root->right->right->right = newNode(24);
+
+    root->right->left->left->left  = newNode(1);
+    root->right->left->left->right = newNode(2);
+    root->right->left->right->left  = newNode(3);
+    root->right->left->right->right = newNode(4);
+    root->right->right->left->left  = newNode(5);
+    root->right->right->left->right = newNode(6);
+    root->right->right->right->left = newNode(7);
+    root->right->right->right->right = newNode(8);
+
+    Node *x = root->right;
+    cout << minDistance(root, x) << endl;
+}
+
+/*
+
+2
+
+*/

@@ -1,0 +1,49 @@
+#include<iostream>
+#include<climits>
+using namespace std;
+
+#define INF INT_MAX
+#define N 4
+
+int minUtil(int cost[][N], int curr, int end)
+{
+    if (curr == end || curr + 1 == end)
+    {
+        return cost[curr][end];
+    }
+
+    int minx = cost[curr][end];
+    for (int i = curr + 1; i < end; ++i)
+    {
+        int d = minUtil(cost, curr, i) + minUtil(cost, i, end);
+        if (d < minx)
+        {
+            minx = d;
+        }
+    }
+
+    return minx;
+}
+
+int minCost(int cost[][N])
+{
+    return minUtil(cost, 0, N-1);
+}
+
+int main()
+{
+    int cost[N][N] = {{0, 15, 80, 90},
+                      {INF, 0, 40, 50},
+                      {INF, INF, 0, 70},
+                      {INF, INF, INF, 0}};
+
+    int minx = minCost(cost);
+    cout << minx;
+    return 0;
+}
+
+/*
+
+65
+
+*/

@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class stack2
+{
+    int *arr;
+    int size;
+    int top1;
+    int top2;
+
+    public:
+    stack2(int n)
+    {
+        arr = new int[n];
+        size = n;
+        top1 = -1;
+        top2 = size;
+    }
+
+    void push(int k, int x)
+    {
+        if (top2 == top1 + 1)
+        {
+            cout << "stack is full" << endl;
+            return;
+        }
+
+        if (k == 1)
+        {
+            ++top1;
+            arr[top1] = x;
+        }
+        else
+        {
+            --top2;
+            arr[top2] = x;
+        }
+    }
+
+    int pop(int k)
+    {
+        if (k == 1 && top1 == -1 || k == 2 && top2 == size)
+        {
+            cout << "stack is empty" << endl;
+            return -1;
+        }
+
+        int x;
+
+        if (k == 1)
+        {
+            x = arr[top1];
+            --top1;
+        }
+        else
+        {
+            x = arr[top2];
+            ++top2;
+        }
+
+        return x;
+    }
+};
+
+int main()
+{
+    stack2 s(5);
+    s.push(1, 5);
+    s.push(2, 10);
+    s.push(2, 15);
+    s.push(1, 11);
+    s.push(2, 7);
+
+    cout << s.pop(1) << endl;
+
+    s.push(2, 40);
+    cout << s.pop(2) << endl;
+}
+
+/*
+
+11
+40
+
+*/

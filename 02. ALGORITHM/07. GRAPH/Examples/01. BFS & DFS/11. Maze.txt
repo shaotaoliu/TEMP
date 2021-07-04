@@ -1,0 +1,69 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define N 4
+
+bool solveUtil(int maze[N][N], int x, int y, bool visit[N][N])
+{
+    visit[x][y] = true;
+
+    if (x == N-1 && y == N-1)
+    {
+        return true;
+    }
+
+    if (x < N-1 && maze[x+1][y] == 1 && solveUtil(maze, x+1, y, visit))
+    {
+        return true;
+    }
+
+    if (y < N-1 && maze[x][y+1] == 1 && solveUtil(maze, x, y+1, visit))
+    {
+        return true;
+    }
+
+    visit[x][y] = false;
+    return false;
+}
+
+void solveMaze(int maze[N][N])
+{
+    bool visit[N][N];
+    memset(visit, false, sizeof(visit));
+
+    solveUtil(maze, 0, 0, visit);
+
+    for (int i = 0; i < N; ++i)
+    {
+        for (int j = 0; j < N; ++j)
+        {
+            printf("%d  ", visit[i][j] ? 1 : 0);
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    int maze[N][N] = {{ 1, 0, 0, 0 },
+                      { 1, 1, 0, 1 },
+                      { 0, 1, 0, 0 },
+                      { 1, 1, 1, 1 }};
+
+    //cout << "Path:" << endl;
+    solveMaze(maze);
+    return 0;
+}
+
+/*
+
+1  0  0  0
+1  1  0  0
+0  1  0  0
+0  1  1  1
+
+*/

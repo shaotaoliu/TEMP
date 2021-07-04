@@ -1,0 +1,94 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+void print_path(int path[], int u, int v)
+{
+    if (u == v)
+    {
+        printf("%d", u);
+        return;
+    }
+
+    print_path(path, u, path[v]);
+    printf(" -> %d", v);
+}
+
+int BFS(vector<int> adj[], int v, int src, int dest)
+{
+    int dist[v];
+    int path[v];
+
+    for (int i = 0; i < v; ++i)
+    {
+        dist[i] = INT_MAX;
+        path[i] = -1;
+    }
+
+    queue<int> q;
+    q.push(src);
+    dist[src] = 0;
+
+    while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+
+        for (vector<int>::iterator it = adj[u].begin(); it != adj[u].end(); ++it)
+        {
+            if (dist[*it] == INT_MAX)
+            {
+                q.push(*it);
+                dist[*it] = dist[u] + 1;
+                path[*it] = u;
+
+                if (*it == dest)
+                {
+                    print_path(path, src, dest);
+                    return dist[*it];
+                }
+            }
+        }
+    }
+
+    return -1;
+}
+
+void add_edge(vector<int> adj[], int src, int dest)
+{
+    adj[src].push_back(dest);
+    adj[dest].push_back(src);
+}
+
+int main()
+{
+    int v = 8;
+    vector<int> adj[v];
+
+    add_edge(adj, 0, 1);
+    add_edge(adj, 0, 3);
+    add_edge(adj, 1, 2);
+    add_edge(adj, 3, 4);
+    add_edge(adj, 3, 7);
+    add_edge(adj, 4, 5);
+    add_edge(adj, 4, 6);
+    add_edge(adj, 4, 7);
+    add_edge(adj, 5, 6);
+    add_edge(adj, 6, 7);
+
+    int src = 2;
+    int dest = 6;
+    int d = BFS(adj, v, src, dest);
+
+    cout << endl << d << endl;
+}
+
+/*
+
+2 -> 1 -> 0 -> 3 -> 4 -> 6
+5
+
+*/

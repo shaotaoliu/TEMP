@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node
+{
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+Node* newNode(int data)
+{
+    Node *temp = new Node;
+    temp->data = data;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+
+Node* findMax(Node* node)
+{
+    if (node == NULL)
+    {
+        return NULL;
+    }
+
+    Node* lc = findMax(node->left);
+    Node* rc = findMax(node->right);
+
+    if (lc != NULL && lc->data > node->data)
+    {
+        node = lc;
+    }
+
+    if (rc != NULL && rc->data > node->data)
+    {
+        node = rc;
+    }
+
+    return node;
+}
+
+int main()
+{
+    Node *root = newNode(2);
+    root->left = newNode(7);
+    root->right = newNode(5);
+    root->left->right = newNode(6);
+    root->left->right->left = newNode(1);
+    root->left->right->right = newNode(11);
+    root->right->right = newNode(9);
+    root->right->right->left = newNode(4);
+
+    Node *max = findMax(root);
+    cout << max->data << endl;
+}
+
+/*
+
+11
+
+*/

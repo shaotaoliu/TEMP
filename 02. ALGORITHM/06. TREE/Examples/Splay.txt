@@ -1,0 +1,180 @@
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left = NULL;
+    Node *right = NULL;
+    Node *parent = NULL;
+
+    Node(int val)
+    {
+        this->data = val;
+    }
+};
+
+void leftRotate(Node *&root, Node *P)
+{
+    Node *X = P->left;
+
+    if (X != NULL)
+    {
+        P->left = X->right;
+        if (X->right != NULL)
+        {
+            X->right->parent = P;
+        }
+
+        X->right = P;
+        X->parent = P->parent;
+    }
+
+    if (P->parent == NULL)          // if P is the root
+    {
+        root = X;
+    }
+    else if (P == P->parent->left)
+    {
+        P->parent->left = X;
+    }
+    else
+    {
+        P->parent->right = X;
+    }
+
+    P->parent = X;
+}
+
+void rightRotate(Node *&root, Node *P)
+{
+    Node *X = P->right;
+
+    if (X != NULL)
+    {
+        P->right = X->left;
+        if (X->left != NULL)
+        {
+            X->left->parent = P;
+        }
+
+        X->left = P;
+        X->parent = P->parent;
+    }
+
+    if (P->parent == NULL)          // if P is the root
+    {
+        root = X;
+    }
+    else if (P == P->parent->left)
+    {
+        P->parent->left = X;
+    }
+    else
+    {
+        P->parent->right = X;
+    }
+
+    P->parent = X;
+}
+
+void splay(Node *&root, Node *X)
+{
+    while (X->parent != NULL)
+    {
+        if (X->parent->parent == NULL)             // X->parent is the root
+        {
+            if (X->parent->left == X)              // X is left child
+            {
+                leftRotate(root, X->parent);
+            }
+            else
+            {
+                rightRotate(root, X->parent);      // X is right child
+            }
+        }
+        else if (X->parent->left == X && X->parent->parent->left == X->parent)        // G->left = P and P->left = X
+        {
+            leftRotate(root, X->parent->parent);
+            leftRotate(root, X->parent);
+        }
+        else if (X->parent->right == X && X->parent->parent->right == X->parent)      // G->right = P and P->right = X
+        {
+            rightRotate(root, X->parent->parent);
+            rightRotate(root, X->parent);
+        }
+        else if (X->parent->left == X && X->parent->parent->right == X->parent)       // G->right = P and P->left = X
+        {
+            leftRotate(root, X->parent);
+            rightRotate(root, X->parent);
+        }
+        else            // G->left = P and P->right = X
+        {
+            rightRotate(root, X->parent);
+            leftRotate(root, X->parent);
+        }
+    }
+}
+
+Node *searchUtil(Node *node, int val)
+{
+    if (node == NULL)
+    {
+        return NULL;
+    }
+
+    if (node->data > val)
+    {
+        return searchUtil(node->left, val);
+    }
+    else if (node->data < val)
+    {
+        return searchUtil(node->right, val);
+    }
+
+    return node;
+}
+
+void search(Node *&root, int val)
+{
+    Node *node = searchUtil(root, val);
+    splay(root, node);
+}
+
+void preOrder(Node *root)
+{
+    if (root != NULL)
+    {
+        cout << root->data << " ";
+        preOrder(root->left);
+        preOrder(root->right);
+    }
+}
+
+int main()
+{
+    Node *root = new Node(100);
+    Node *n1 = new Node(50);
+    Node *n2 = new Node(200);
+    Node *n3 = new Node(40);
+    Node *n4 = new Node(30);
+    Node *n5 = new Node(20);
+
+    root->left = n1;
+    n1->parent = root;
+
+    root->right = n2;
+    n2->parent = root;
+
+    n1->left = n3;
+    n3->parent = n1;
+    n3->left = n4;
+    n4->parent = n3;
+    n4->left = n5;
+    n5->parent = n4;
+
+    search(root, 20);
+    preOrder(root);
+}
+
+// 20 50 30 40 100 200

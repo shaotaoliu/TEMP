@@ -1,0 +1,44 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+int findUtil(int amount, int a[], int index)
+{
+    if (amount == 0 || index == 0)
+    {
+        return 1;
+    }
+
+    int count = 0;
+
+    for (int i = 0; a[index] * i <= amount; ++i)
+    {
+        int leftAmount = amount - a[index] * i;
+        count += findUtil(leftAmount, a, index - 1);
+    }
+
+    return count;
+}
+
+int find(int amount)
+{
+    int a[] = {1, 5, 10, 25};
+    return findUtil(amount, a, 3);
+}
+
+int main()
+{
+    cout << find(95);
+}
+
+/*
+
+213
+
+*/
+
+
+
+      

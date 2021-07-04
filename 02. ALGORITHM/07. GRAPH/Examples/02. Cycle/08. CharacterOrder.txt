@@ -1,0 +1,117 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+class Graph
+{
+    int V;
+    list<int> *adj;
+
+    public:
+    Graph(int V);
+    void addEdge(int v, int w);
+    void topologicalSort();
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w);
+}
+
+void Graph::topologicalSort()
+{
+    int indegree[V] = {0};
+    for (int i = 0; i < V; ++i)
+    {
+        for (auto j : adj[i])
+        {
+            ++indegree[j];
+        }
+    }
+
+    queue<int> q;
+    for (int i = 0; i < V; ++i)
+    {
+        if (indegree[i] == 0)
+        {
+            q.push(i);
+        }
+    }
+
+    while (!q.empty())
+    {
+        int i = q.front();
+        q.pop();
+        printf("%c, ", i + 'a');
+
+        for (auto j : adj[i])
+        {
+            --indegree[j];
+            if (indegree[j] == 0)
+            {
+                q.push(j);
+            }
+        }
+    }
+}
+
+void printOrder(string words[], int n)
+{
+    // find the number of characters
+    int chars[26];
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < words[i].length(); ++j)
+        {
+            chars[words[i][j] - 'a'] = 1;
+        }
+    }
+
+    int V = 0;
+    for (int i = 0; i < 26; ++i)
+    {
+        if (chars[i] == 1)
+        {
+            ++V;
+        }
+    }
+
+    Graph g(V);
+
+    for (int i = 0; i < n-1; ++i)
+    {
+        for (int j = 0; j < min(words[i].length(), words[i+1].length()); ++j)
+        {
+            if (words[i][j] != words[i+1][j])
+            {
+                g.addEdge(words[i][j] - 'a', words[i+1][j] - 'a');
+                break;
+            }
+        }
+    }
+
+    g.topologicalSort();
+}
+
+int main()
+{
+    string words[] = { "baa", "abcd", "abca", "cab", "cad" };
+    int n = sizeof(words) / sizeof(words[0]);
+    printOrder(words, n);
+    return 0;
+}
+
+/*
+
+b, d, a, c,
+
+*/

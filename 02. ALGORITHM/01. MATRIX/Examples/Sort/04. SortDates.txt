@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Date
+{
+    int day, month, year;
+};
+
+bool compare(Date &a, Date &b)
+{
+    return (a.year < b.year ||
+    a.year == b.year && a.month < b.month ||
+    a.year == b.year && a.month == b.month && a.day < b.day);
+}
+
+void sortDates(Date a[], int n)
+{
+    sort(a, a + n, compare);
+}
+
+int main()
+{
+    Date a[] = {{20, 1, 2014}, {25, 3, 2010}, {3, 12, 1676},
+    {18, 11, 1982}, {19, 4, 2015}, {9, 7, 2015}};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    sortDates(a, n);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("%3d%3d%5d\n", a[i].day, a[i].month, a[i].year);
+    }
+}
+
+/*
+
+ 3 12 1676
+18 11 1982
+25  3 2010
+20  1 2014
+19  4 2015
+ 9  7 2015
+
+*/

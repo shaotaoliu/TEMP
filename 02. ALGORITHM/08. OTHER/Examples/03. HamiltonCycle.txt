@@ -1,0 +1,81 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 5
+
+bool findUtil(bool g[][V], int curr, int start, bool visit[], int count, stack<int> &s)
+{
+    if (curr == start && count == V)
+    {
+        return true;
+    }
+
+    for (int i = 0; i < V; ++i)
+    {
+        if (g[curr][i] == 1 && visit[i] == false)
+        {
+            visit[i] = true;
+
+            if (findUtil(g, i, start, visit, count + 1, s))
+            {
+                s.push(i);
+                return true;
+            }
+
+            visit[i] = false;
+        }
+    }
+
+    return false;
+}
+
+void hamCycle(bool graph[V][V])
+{
+    bool visit[V];
+    memset(visit, false, sizeof(visit));
+
+    stack<int> s;
+    bool found = findUtil(graph, 0, 0, visit, 0, s);
+
+    if (!found)
+    {
+        cout << "Not found";
+        return;
+    }
+
+    printf("0, ");
+    while (!s.empty())
+    {
+        printf("%d, ", s.top());
+        s.pop();
+    }
+}
+
+int main()
+{
+    bool graph1[V][V] = {{0, 1, 0, 1, 0},
+                         {1, 0, 1, 1, 1},
+                         {0, 1, 0, 0, 1},
+                         {1, 1, 0, 0, 1},
+                         {0, 1, 1, 1, 0}};
+    hamCycle(graph1);
+    cout << endl;
+
+    bool graph2[V][V] = {{0, 1, 0, 1, 0},
+                         {1, 0, 1, 1, 1},
+                         {0, 1, 0, 0, 1},
+                         {1, 1, 0, 0, 0},
+                         {0, 1, 1, 0, 0}};
+    hamCycle(graph2);
+}
+
+/*
+
+0, 1, 2, 4, 3, 0, 
+Not found
+
+*/

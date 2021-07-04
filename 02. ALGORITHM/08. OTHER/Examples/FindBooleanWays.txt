@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int findWays(string s, bool result)
+{
+    int len = s.length();
+    if (len == 0)
+    {
+        return 0;
+    }
+
+    if (len == 1)
+    {
+        return s == "1" && result || s == "0" && !result;
+    }
+
+    int count = 0;
+    for (int i = 1; i < len; i += 2)
+    {
+        string ls = s.substr(0, i);
+        string rs = s.substr(i + 1);
+
+        int ltrue = findWays(ls, true);
+        int rtrue = findWays(rs, true);
+        int lfalse = findWays(ls, false);
+        int rfalse = findWays(rs, false);
+        int trues = 0;
+
+        if (s[i] == '&')
+        {
+            trues = ltrue * rtrue;
+        }
+        else if (s[i] == '|')
+        {
+            trues = ltrue * rtrue + ltrue * rfalse + lfalse *rtrue;
+        }
+        else
+        {
+            trues = ltrue * rfalse + lfalse * rtrue;
+        }
+
+        if (result)
+        {
+            count += trues;
+        }
+        else
+        {
+            count += (ltrue + lfalse) * (rtrue + rfalse) - trues;
+        }
+    }
+
+    return count;
+}
+
+int main()
+{
+    string s = "0&0&0&1^1|0";
+    int n = findWays(s, true);
+    cout << n;
+}
+
+/*
+
+10
+
+*/

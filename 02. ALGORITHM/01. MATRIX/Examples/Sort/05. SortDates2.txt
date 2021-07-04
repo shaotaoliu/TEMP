@@ -1,0 +1,109 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define YEARS 100
+#define MONTHS 13
+#define DAYS 32
+
+struct Date
+{
+    int day, month, year;
+};
+
+void sortDays(vector<Date> &a)
+{
+    vector<Date> vec[DAYS];
+
+    for (int i = 0; i < a.size(); ++i)
+    {
+        vec[a[i].day].push_back(a[i]);
+    }
+
+    int k = 0;
+    for (int i = 0; i < DAYS; ++i)
+    {
+        for (int j = 0; j < vec[i].size(); ++j)
+        {
+            a[k++] = vec[i][j];
+        }
+    }
+}
+
+void sortMonths(vector<Date> &a)
+{
+    vector<Date> vec[MONTHS];
+
+    for (int i = 0; i < a.size(); ++i)
+    {
+        vec[a[i].month].push_back(a[i]);
+    }
+
+    for (int i = 0; i < MONTHS; ++i)
+    {
+        if (vec[i].size() > 1)
+        {
+            sortDays(vec[i]);
+        }
+    }
+
+    int k = 0;
+    for (int i = 0; i < MONTHS; ++i)
+    {
+        for (int j = 0; j < vec[i].size(); ++j)
+        {
+            a[k++] = vec[i][j];
+        }
+    }
+}
+
+void sortYears(Date a[], int n)
+{
+    vector<Date> vec[YEARS];
+
+    for (int i = 0; i < n; ++i)
+    {
+        vec[a[i].year - 2000].push_back(a[i]);
+    }
+
+    for (int i = 0; i < YEARS; ++i)
+    {
+        if (vec[i].size() > 1)
+        {
+            sortMonths(vec[i]);
+        }
+    }
+
+    int k = 0;
+    for (int i = 0; i < YEARS; ++i)
+    {
+        for (int j = 0; j < vec[i].size(); ++j)
+        {
+            a[k++] = vec[i][j];
+        }
+    }
+}
+
+int main()
+{
+    Date a[] = {{20, 1, 2014}, {25, 3, 2015}, {3, 12, 2000},
+                {18, 11, 2006}, {19, 4, 2015}, {9, 7, 2010}};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    sortYears(a, n);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("%3d%3d%5d\n", a[i].day, a[i].month, a[i].year);
+    }
+}
+
+/*
+
+  3 12 2000
+ 18 11 2006
+  9  7 2010
+ 20  1 2014
+ 25  3 2015
+ 19  4 2015
+
+*/

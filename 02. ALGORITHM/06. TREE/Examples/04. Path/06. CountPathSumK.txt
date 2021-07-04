@@ -1,0 +1,70 @@
+#include <iostream>
+#include <list>
+#include <unordered_map>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left, *right;
+
+    Node(int d)
+    {
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+int countPath(Node *root, int sum, int k, unordered_map<int, int> m)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    int count = 0;
+    sum += root->data;
+
+    if (m.find(sum - k) != m.end())
+    {
+        count += m[sum - k];
+    }
+
+    m[sum]++;
+
+    count += countPath(root->left, sum, k, m);
+    count += countPath(root->right, sum, k, m);
+    return count;
+}
+
+int countPath(Node *root, int k)
+{
+    unordered_map<int, int> m;
+    m[0] = 1;
+
+    return countPath(root, 0, k, m);
+}
+
+int main()
+{
+    Node *root = new Node(8);
+    root->left = new Node(5);
+    root->right = new Node(-3);
+    root->right->right = new Node(11);
+    root->left->left = new Node(3);
+    root->left->right = new Node(2);
+    root->left->left->left = new Node(3);
+    root->left->left->right = new Node(-2);
+    root->left->right->right = new Node(1);
+
+    int k = 8;
+    int count = countPath(root, k);
+    cout << count;
+}
+
+/*
+
+4
+
+*/

@@ -1,0 +1,32 @@
+#include <iostream>
+#include <list>
+#include <unordered_map>
+using namespace std;
+
+int merge(int m, int n, int i, int j)
+{
+    int a = ~0 << (j + 1);           // 11110000000
+    int b = ~(~0 << i);              // 00000000011
+    int c = a | b;                   // 11110000011
+
+    m = m & c;                       // 11010000010
+    n = n << i;                      // 00001010100
+
+    return m | n;                    // 11011010110
+}
+
+int main()
+{
+    int m = 0b11011111110;
+    int n = 0b10101;
+    int i = 2;
+    int j = 6;
+
+    cout << merge(m, n, i, j);
+}
+
+/*
+
+1750
+
+*/

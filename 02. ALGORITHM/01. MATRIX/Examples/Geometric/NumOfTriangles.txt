@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int gcd(int m, int n)
+{
+    if (n == 0)
+    {
+        return m;
+    }
+
+    return gcd(n, m % n);
+}
+
+int triangles(int a[], int b[], int c[], int n)
+{
+    map<pair<int, int>, int> m;
+
+    for (int i = 0; i < n; ++i)
+    {
+        int g = gcd(a[i], b[i]);
+        m[make_pair(a[i] / g, b[i] / g)]++;
+    }
+
+    int dp[m.size()];
+    int index = 0;
+
+    for (auto p : m)
+    {
+        dp[index++] = p.second;
+    }
+
+    int count = 0;
+
+    for (int i = 0; i < index - 2; ++i)
+    {
+        for (int j = i + 1; j < index - 1; ++j)
+        {
+            for (int k = j + 1; k < index; ++k)
+            {
+                count += dp[i] * dp[j] * dp[k];
+            }
+        }
+    }
+
+    return count;
+}
+
+int main()
+{
+    int a[] = {1, 2, 3, 2, 4, 1, 2, 3, 4, 5, 8, 18};
+    int b[] = {2, 4, 6, 3, 6, 5, 10, 15, 20, 25, 18, 28};
+    int c[] = {3, 5, 11, 10, 9, 17, 13, 11, 7, 3, 18, 38} ;
+
+    int n = sizeof(a) / sizeof(a[0]);
+    cout << triangles(a, b, c, n);
+}
+
+// 102

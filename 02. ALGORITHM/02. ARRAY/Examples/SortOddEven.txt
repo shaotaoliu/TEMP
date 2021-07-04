@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool compare(int a, int b)
+{
+    if (a % 2 == 1)
+    {
+        return b % 2 == 1 ? a > b : true;
+    }
+    else
+    {
+        return b % 2 == 1 ? false : a < b;
+    }
+}
+
+void sortOddEven(int a[], int n)
+{
+    sort(a, a + n, compare);
+}
+
+int main()
+{
+    int a[] = {6, 15, 11, 2, 17, 0, 19, 4, 13};
+    int n = sizeof(a) / sizeof(int);
+
+    sortOddEven(a, n);
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i] << " ";
+    }
+}
+
+/*
+
+19 17 15 13 11 0 2 4 6
+
+*/

@@ -1,0 +1,108 @@
+//https://www.geeksforgeeks.org/construct-tree-from-ancestor-matrix/
+#include <bits/stdc++.h>
+using namespace std;
+
+# define N 6
+
+struct Nodes
+{
+    int data;
+    Node *left, *right;
+};
+
+Node* newNode(int data)
+{
+    Node* node = new Node;
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+void printInorder(Node* node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    printInorder(node->left);
+    printf("%d ", node->data);
+    printInorder(node->right);
+}
+
+Node* ancestorTree(int mat[][N])
+{
+    int degree[N] = {0};
+    for (int j = 0; j < N; ++j)
+    {
+        for (int i = 0; i < N; ++i)
+        {
+            if (mat[i][j] == 1)
+            {
+                ++degree[j];
+            }
+        }
+    }
+
+    queue<Node*> q;
+    Node *head;
+
+    for (int j = 0; j < N; ++j)
+    {
+        if (degree[j] == 0)
+        {
+            head = newNode(j);
+            q.push(head);
+            break;
+        }
+    }
+
+    while (!q.empty())
+    {
+        Node *n = q.front();
+        q.pop();
+
+        for (int i = 0; i < N; ++i)
+        {
+            if (mat[n->data][i] == 1)
+            {
+                --degree[i];
+
+                if (degree[i] == 0)
+                {
+                    if (n->left == NULL)
+                    {
+                        n->left = newNode(i);
+                        q.push(n->left);
+                    }
+                    else
+                    {
+                        n->right = newNode(i);
+                        q.push(n->right);
+                    }
+                }
+            }
+        }
+    }
+
+    return head;
+}
+
+int main()
+{
+    int mat[N][N] = {{ 0, 0, 0, 0, 0, 0 },
+                     { 1, 0, 0, 0, 1, 0 },
+                     { 0, 0, 0, 1, 0, 0 },
+                     { 0, 0, 0, 0, 0, 0 },
+                     { 0, 0, 0, 0, 0, 0 },
+                     { 1, 1, 1, 1, 1, 0 }};
+
+    Node* root = ancestorTree(mat);
+    printInorder(root);
+}
+
+/*
+
+0 1 4 5 3 2
+
+*/

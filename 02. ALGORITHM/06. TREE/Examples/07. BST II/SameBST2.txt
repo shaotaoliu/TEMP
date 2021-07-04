@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool sameBST(vector<int> a, vector<int> b)
+{
+    if (a.size() != b.size())
+    {
+        return false;
+    }
+
+    if (a.size() == 0)
+    {
+        return true;
+    }
+
+    if (a[0] != b[0])
+    {
+        return false;
+    }
+
+    vector<int> va1;        // contains the elements < a[0]
+    vector<int> vb1;        // contains the elements > a[0]
+    vector<int> va2;        // contains the elements < b[0]
+    vector<int> vb2;        // contains the elements > b[0]
+
+    for (int i = 1; i < a.size(); ++i)
+    {
+        if (a[i] < a[0])
+        {
+            va1.push_back(a[i]);
+        }
+        else
+        {
+            va2.push_back(a[i]);
+        }
+
+        if (b[i] < a[0])
+        {
+            vb1.push_back(b[i]);
+        }
+        else
+        {
+            vb2.push_back(b[i]);
+        }
+    }
+
+    return sameBST(va1, vb1) && sameBST(va2, vb2);
+}
+
+int main()
+{
+    //vector<int> a = {8, 3, 6, 1, 4, 7, 10, 14, 13};
+    //vector<int> b = {8, 10, 14, 3, 6, 4, 1, 7, 13};
+
+    vector<int> a = {6, 3, 5, 1, 8, 9};
+    vector<int> b = {6, 8, 9, 3, 1, 5};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    if (sameBST(a, b))
+    {
+        cout << "Same";
+    }
+    else
+    {
+        cout << "Not Same";
+    }
+}
+
+/*
+
+Same
+
+*/

@@ -1,0 +1,83 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+void findUtil(int a[], int n, int index, int &sum, bool curr[], int csize, int csum, bool final[], int &minDiff)
+{
+    if (csize == n / 2)
+    {
+        int diff = abs(sum - 2 * csum);
+        if (diff < minDiff)
+        {
+            minDiff = diff;
+            for (int i = 0; i < n; ++i)
+            {
+                final[i] = curr[i];
+            }
+        }
+        return;
+    }
+
+    if (csize + n - index < n/2)
+    {
+        return;
+    }
+
+    findUtil(a, n, index + 1, sum, curr, csize, csum, final, minDiff);
+
+    curr[index] = true;
+    ++csize;
+    csum += a[index];
+
+    findUtil(a, n, index + 1, sum, curr, csize, csum, final, minDiff);
+    curr[index] = false;
+}
+
+void printSubset(int a[], int n, bool final[], bool val)
+{
+    for (int i = 0; i < n; ++i)
+    {
+        if (final[i] == val)
+        {
+            printf("%d, ", a[i]);
+        }
+    }
+}
+
+void find(int a[], int n)
+{
+    bool curr[n];
+    bool final[n];
+    int sum = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        sum += a[i];
+        curr[i] = false;
+        final[i] = false;
+    }
+
+    int minDiff = INT_MAX;
+    findUtil(a, n, 0, sum, curr, 0, 0, final, minDiff);
+
+    printSubset(a, n, final, true);
+    printf("\n");
+    printSubset(a, n, final, false);
+}
+
+int main()
+{
+    int a[] = {23, 45, -34, 12, 0, 98, -99, 4, 189, -1, 4};
+    int n = sizeof(a)/sizeof(a[0]);
+    find(a, n);
+}
+
+/*
+
+45, -34, 12, 98, -1,
+23, 0, -99, 4, 189, 4,
+
+*/

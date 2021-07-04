@@ -1,0 +1,82 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+int search(int a[], int x, int n)
+{
+    if (a[0] >= x)
+    {
+        return 0;
+    }
+
+    if (a[n-1] <= x)
+    {
+        return n-1;
+    }
+
+    int low = 0;
+    int high = n-1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+        if (a[mid] == x || a[mid] < x && a[mid+1] > x)
+        {
+            return mid;
+        }
+        else if (a[mid] < x)
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+}
+
+void printKclosest(int a[], int n, int x, int k)
+{
+    int i = search(a, x, n);
+    int j = i + 1;
+
+    if (a[i] == x)
+    {
+        --i;
+    }
+
+    while (k > 0)
+    {
+        if (i < 0)
+        {
+            cout << a[j++] << ", ";
+        }
+        else if (j == n)
+        {
+            cout << a[i--] << ", ";
+        }
+        else if (x - a[i] > a[j] - x)
+        {
+            cout << a[j++] << ", ";
+        }
+        else
+        {
+            cout << a[i--] << ", ";
+        }
+
+        --k;
+    }
+}
+
+int main()
+{
+    int a[] ={12, 16, 22, 30, 35, 39, 42, 45, 48, 50, 53, 55, 56};
+    int n = sizeof(a) / sizeof(a[0]);
+    int x = 35, k = 4;
+    printKclosest(a, n, x, 4);
+}
+
+/*
+
+39, 30, 42, 45
+
+*/

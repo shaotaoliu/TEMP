@@ -1,0 +1,93 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+class Graph
+{
+    int V;
+    list<int> *adj;
+    void printUtil(int s, int d, bool visit[], int path[]);
+
+    public:
+    Graph(int V);
+    void addEdge(int u, int v);
+    void printAllPaths(int s, int d);
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+void Graph::addEdge(int u, int v)
+{
+    adj[u].push_back(v);
+}
+
+void printPath(int path[], int v)
+{
+    if (path[v] == -1)
+    {
+        printf("%d");
+        return;
+    }
+
+    printPath(path, path[v]);
+    printf(" -> %d", v);
+}
+
+void Graph::printUtil(int s, int d, bool visited[], int path[])
+{
+    if (s == d)
+    {
+        printPath(path, d);
+        printf("\n");
+        return;
+    }
+
+    visited[s] = true;
+
+    for (int v : adj[s])
+    {
+        if (visited[v] == false)
+        {
+            path[v] = s;
+            printUtil(v, d, visited, path);
+            path[v] = -1;
+        }
+    }
+
+    visited[s] = false;
+}
+
+void Graph::printAllPaths(int s, int d)
+{
+    bool visited[V];
+    memset(visited, false, sizeof(visited));
+
+    int path[V] = {0};
+    memset(path, -1, sizeof(path));
+
+    printUtil(s, d, visited, path);
+}
+
+int main()
+{
+    Graph g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(0, 3);
+    g.addEdge(2, 0);
+    g.addEdge(2, 1);
+    g.addEdge(1, 3);
+
+    int s = 2, d = 3;
+    cout << "Path:" << endl;
+    g.printAllPaths(s, d);
+
+    return 0;
+}

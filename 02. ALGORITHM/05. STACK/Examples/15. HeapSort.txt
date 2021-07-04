@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void MaxHeapify(int a[], int n, int index)
+{
+    int l = index * 2 + 1;
+    int r = index * 2 + 2;
+    int largest = index;
+
+    if (l < n && a[l] > a[largest])
+    {
+        largest = l;
+    }
+
+    if (r < n && a[r] > a[largest])
+    {
+        largest = r;
+    }
+
+    if (largest != index)
+    {
+        swap(a[index], a[largest]);
+        MaxHeapify(a, n, largest);
+    }
+}
+
+void heapSort(int a[], int n)
+{
+    // build the Max heap
+    for (int i = n/2 - 1; i >= 0; --i)
+    {
+        MaxHeapify(a, n, i);
+    }
+
+    // move the current max to the end
+    for (int i = n-1; i > 0; --i)
+    {
+        swap(a[0], a[i]);
+        MaxHeapify(a, i, 0);
+    }
+}
+
+void printArray(int arr[], int n)
+{
+    for (int i=0; i<n; ++i)
+    cout << arr[i] << " ";
+    cout << "\n";
+}
+
+int main()
+{
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    heapSort(arr, n);
+    printArray(arr, n);
+}
+
+/*
+
+5 6 7 11 12 13
+
+*/

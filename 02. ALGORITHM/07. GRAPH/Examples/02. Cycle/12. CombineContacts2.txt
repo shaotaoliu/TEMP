@@ -1,0 +1,94 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define N 7
+
+void buildGraph(string a[][3], int mat[][N])
+{
+    for (int i = 0; i < N; ++i)
+    {
+        for (int j = i + 1; j < N; ++j)
+        {
+            if (a[i][0] == a[j][0] || a[i][0] == a[j][1] || a[i][0] == a[j][2] ||
+            a[i][1] == a[j][0] || a[i][1] == a[j][1] || a[i][1] == a[j][2] ||
+            a[i][2] == a[j][0] || a[i][2] == a[j][1] || a[i][2] == a[j][2])
+            {
+                mat[i][j] = 1;
+                mat[j][i] = 1;
+                break;
+            }
+        }
+    }
+}
+
+void DFSUtil(int i, int mat[][N], bool visited[], vector<int> &vec)
+{
+    vec.push_back(i);
+    visited[i] = true;
+
+    for (int j = 0; j < N; ++j)
+    {
+        if (mat[i][j] && !visited[j])
+        {
+            DFSUtil(j, mat, visited, vec);
+        }
+    }
+}
+
+void find(string a[][3])
+{
+    bool visited[N];
+    memset(visited, false, sizeof(visited));
+
+    int mat[N][N] = {0};
+    buildGraph(a, mat);
+
+    vector<int> vec;
+
+    for (int i = 0; i < N; ++i)
+    {
+        if (!visited[i])
+        {
+            DFSUtil(i, mat, visited, vec);
+
+            // Add delimeter to separate nodes of one component from other.
+            vec.push_back(-1);
+        }
+    }
+
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        if (vec[i] == -1)
+        {
+            cout << endl;
+        }
+        else
+        {
+            cout << vec[i] << " ";
+        }
+    }
+}
+
+int main()
+{
+    string arr[][3] = {{"Keven", "00000000", "keven@yahoo.com"},
+                       {"Mike", "11111111", "mike@amazon.com"},
+                       {"Andy", "11111111", "keven@yahoo.com"},
+                       {"Lucky", "lucky@gmail.com", "123456"},
+                       {"Bruce", "22222222", "bruce@gmail.com"},
+                       {"Chris", "33333333", "chris@amazon.com"},
+                       {"Lucky", "22222222", "chris@amazon.com"}};
+
+    find(arr);
+}
+
+/*
+
+6 4 5 3
+1 0 2
+
+*/

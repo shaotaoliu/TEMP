@@ -1,0 +1,125 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+void sortNegA(int arr[], int temp[], int n)
+{
+    // Find the maximum element in the array:
+    int index = 0;
+    while (index < n-1 && temp[index] < temp[index + 1])
+    {
+        ++index;
+    }
+
+    int i = index;
+    int j = index + 1;
+    int k = n - 1;
+
+    while (i >= 0 && j < n)
+    {
+        if (temp[i] > temp[j])
+        {
+            arr[k--] = temp[i--];
+        }
+        else
+        {
+            arr[k--] = temp[j++];
+        }
+    }
+
+    while (i >= 0)
+    {
+        arr[k--] = temp[i--];
+    }
+
+    while (j < n)
+    {
+        arr[k--] = temp[j++];
+    }
+}
+
+void sortPosA(int arr[], int temp[], int n)
+{
+    // Find the minimum element in the array:
+    int index = 0;
+    while (index < n-1 && temp[index] > temp[index + 1])
+    {
+        ++index;
+    }
+
+    int i = index;
+    int j = index + 1;
+    int k = 0;
+
+    while (i >= 0 && j < n)
+    {
+        if (temp[i] < temp[j])
+        {
+            arr[k++] = temp[i--];
+        }
+        else
+        {
+            arr[k++] = temp[j++];
+        }
+    }
+
+    while (i >= 0)
+    {
+        arr[k++] = temp[i--];
+    }
+
+    while (j < n)
+    {
+        arr[k++] = temp[j++];
+    }
+}
+
+void sortArray(int arr[], int n, int a, int b, int c)
+{
+    int temp[n];
+    for (int i = 0; i < n; ++i)
+    {
+        temp[i] = a * arr[i] * arr[i] + b * arr[i] + c;
+    }
+
+    if (a > 0)
+    {
+        sortPosA(arr, temp, n);
+    }
+    else
+    {
+        sortNegA(arr, temp, n);
+    }
+}
+
+void printArray(int a[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i] << ", ";
+    }
+
+    cout << endl;
+}
+
+int main()
+{
+    int arr[] = { -10, -5, -1, 0, 1, 3, 6, 10};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int A = -3, B = -5, C = 2;
+
+    sortArray(arr, n, A, B, C);
+    printArray(arr, n);
+}
+
+/*
+
+-348, -248, -136, -48, -40, -6, 2, 4
+
+*/

@@ -1,0 +1,54 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+int minOperations(int x, int y)
+{
+    queue<pair<int, int>> q;
+    q.push({x, 0});
+
+    unordered_set<int> s;
+    s.insert(x);
+
+    while (!q.empty())
+    {
+        int z = q.front().first;
+        int d = q.front().second;
+        q.pop();
+
+        if (z == y)
+        {
+            return d;
+        }
+
+        if (s.find(z * 2) == s.end())
+        {
+            q.push({z * 2, d + 1});
+            s.insert(z * 2);
+        }
+
+        if (s.find(z - 1) == s.end())
+        {
+            q.push({z - 1, d + 1});
+            s.insert(z - 1);
+        }
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int x = 4, y = 7;
+    cout << minOperations(x, y);
+    return 0;
+}
+
+/*
+
+2
+
+*/

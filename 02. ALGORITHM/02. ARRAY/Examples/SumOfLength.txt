@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int sumoflength(int a[], int n)
+{
+    unordered_set<int> s;
+    int sum = 0;
+    int j = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        while (j < n && s.find(a[j]) == s.end())
+        {
+            s.insert(a[j]);
+            ++j;
+        }
+
+        sum += (j - i) * (j - i + 1) / 2;
+        s.erase(a[i]);
+    }
+
+    return sum;
+}
+
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 2, 1, 4, 1};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    cout << sumoflength(arr, n) << endl;
+    return 0;
+}
+
+/*
+
+45
+
+*/

@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int countDistictSubarray(int a[], int n)
+{
+    unordered_set<int> s;
+    for (int i = 0; i < n; ++i)
+    {
+        s.insert(a[i]);
+    }
+
+    int numOfElements = s.size();
+    unordered_map<int, int> m;
+    int count = 0;
+    int j = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        while (j < n && m.size() < numOfElements)
+        {
+            m[a[j]]++;
+            ++j;
+        }
+
+        if (m.size() == numOfElements)
+        {
+            count += n - j + 1;        // the number of subarrays from a[i] to a[j-1..n-1]
+        }
+
+        m[a[i]]--;
+        if (m[a[i]] == 0)
+        {
+            m.erase(a[i]);
+        }
+    }
+
+    return count;
+}
+
+int main()
+{
+    int arr[] = {2, 1, 3, 2, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    cout << countDistictSubarray(arr, n) << endl;
+}
+
+/*
+
+5
+
+*/

@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void printArray(int a[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i] << ", ";
+    }
+
+    cout << endl;
+}
+
+int generate(int a[], int low, int high)
+{
+    if (low < high)
+    {
+        int mid = (low + high) / 2;
+
+        int left[mid - low + 1];
+        int right[high - mid];
+
+        // split a to left and right:
+        for (int i = 0, j = low; j <= high; ++i, j += 2)
+        {
+            left[i] = a[j];
+        }
+
+        for (int i = 0, j = low + 1; j <= high; ++i, j += 2)
+        {
+            right[i] = a[j];
+        }
+
+        generate(left, 0, mid - low);
+        generate(right, 0, high - mid - 1);
+
+        // join left and right to a:
+        for (int i = low, j = 0; i <= mid; ++i, ++j)
+        {
+            a[i] = left[j];
+        }
+
+        for (int i = mid+1, j = 0; i <= high; ++i, ++j)
+        {
+            a[i] = right[j];
+        }
+    }
+}
+
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    generate(arr, 0, n - 1);
+    printArray(arr, n);
+}
+
+/*
+
+1 9 5 13 3 11 7 15 2 10 6 14 4 12 8 16
+
+*/

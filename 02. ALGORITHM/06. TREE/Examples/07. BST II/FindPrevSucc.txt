@@ -1,0 +1,104 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node
+{
+    int data;
+    struct Node *left, *right;
+};
+
+Node* newNode(int data)
+{
+    Node* temp = new Node;
+    temp->data = data;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+Node* insert(Node* node, int data)
+{
+    if (node == NULL)
+    return newNode(data);
+    if (data < node->data)
+    node->left = insert(node->left, data);
+    else
+    node->right = insert(node->right, data);
+    return node;
+}
+
+void findPrevSucc(Node *root, int x, Node *&predecessor, Node *&successor)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    while (root != NULL)
+    {
+        if (root->data == x)
+        {
+            if (root->right != NULL)
+            {
+                successor = root->right;
+                while (successor->left)
+                {
+                    successor = successor->left;
+                }
+            }
+
+            if (root->left != NULL)
+            {
+                predecessor = root->left;
+                while (predecessor->right)
+                {
+                    predecessor = predecessor->right;
+                }
+            }
+
+            return;
+        }
+        else if (root->data < x)
+        {
+            predecessor = root;
+            root = root->right;
+        }
+        else
+        {
+            successor = root;
+            root = root->left;
+        }
+    }
+}
+
+int main()
+{
+    int data = 65;
+    Node* root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    Node *pre = NULL, *suc = NULL;
+
+    findPrevSucc(root, data, pre, suc);
+    if (pre != NULL)
+    cout << "Predecessor is " << pre->data << endl;
+    else
+    cout << "-1";
+
+    if (suc != NULL)
+    cout << "Successor is " << suc->data;
+    else
+    cout << "-1";
+}
+
+/*
+
+Predecessor is 60
+Successor is 70
+
+*/

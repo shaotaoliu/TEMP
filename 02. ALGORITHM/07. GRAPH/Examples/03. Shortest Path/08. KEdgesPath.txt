@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 4
+
+int shortestPath(int g[][V], int u, int v, int k)
+{
+    if (u == v && k == 0)
+    {
+        return 0;
+    }
+
+    if (k <= 0)
+    {
+        return INT_MAX;
+    }
+
+    int minx = INT_MAX;
+
+    for (int i = 0; i < V; ++i)
+    {
+        if (g[u][i] != INT_MAX && i != u)
+        {
+            int d = shortestPath(g, i, v, k-1);
+            if (d != INT_MAX)
+            {
+                minx = min(minx, d + g[u][i]);
+            }
+        }
+    }
+
+    return minx;
+}
+
+int main()
+{
+    int graph[V][V] = {{    0,      10,       3,    2 },
+                       { INT_MAX,    0,    INT_MAX, 7 },
+                       { INT_MAX, INT_MAX,    0,    6 },
+                       { INT_MAX, INT_MAX, INT_MAX, 0 }};
+
+    int u = 0, v = 3, k = 2;
+    int d = shortestPath(graph, u, v, k);
+    cout << "Weight of the shortest path: " << d;
+    return 0;
+}
+
+/*
+
+Weight of the shortest path: 9
+
+*/

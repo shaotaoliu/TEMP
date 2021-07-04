@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void print(int a[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        cout << a[i] << " ";
+    }
+}
+
+void countSort(int a[], int n, int d)
+{
+    int freq[10] = {0};
+    for (int i = 0; i < n; ++i)
+    {
+        freq[(a[i] / d) % 10 ]++;
+    }
+
+    // Change freq[i] so that freq[i] contains actual position of this digit in temp[]
+    for (int i = 1; i < 10; i++)
+    {
+        freq[i] += freq[i - 1];
+    }
+
+    // Build the output array
+    int temp[n];
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int digit = (a[i] / d) % 10;
+        temp[freq[digit] - 1] = a[i];
+        freq[digit]--;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        a[i] = temp[i];
+    }
+}
+
+void radixSort(int a[], int n)
+{
+    int maxx = a[0];
+    for (int i = 1; i < n; ++i)
+    {
+        maxx = max(maxx, a[i]);
+    }
+
+    for (int d = 1; maxx / d > 0; d *= 10)
+    {
+        countSort(a, n, d);
+    }
+}
+
+int main()
+{
+    int a[] = {170, 45, 75, 90, 802, 24, 2, 66};
+    int n = sizeof(a) / sizeof(a[0]);
+
+    radixSort(a, n);
+    print(a, n);
+}
+
+/*
+
+2 24 45 66 75 90 170 802
+
+*/

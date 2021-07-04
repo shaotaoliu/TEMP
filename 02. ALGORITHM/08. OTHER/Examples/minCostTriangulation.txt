@@ -1,0 +1,43 @@
+#include <iostream>
+using namespace std;
+
+double dist(pair<int, int> p1, pair<int, int> p2)
+{
+    int a = p2.second - p1.second;
+    int b = p2.first - p1.first;
+    return sqrt(a * a + b * b);
+}
+
+double minUtil(pair<int, int> a[], int p1, int p2)
+{
+    if (p1 + 2 > p2)          // must be at least three points
+    {
+        return 0;
+    }
+
+    double res = INT_MAX;
+
+    for (int i = p1 + 1; i < p2; ++i)
+    {
+        double cost = dist(a[p1], a[i]) + dist(a[p2], a[i]) + dist(a[p1], a[p2]);
+        res = min(res, cost + minUtil(a, p1, i) + minUtil(a, i, p2));
+    }
+
+    return  res;
+}
+
+double minCost(pair<int, int> points[], int n)
+{
+    return  minUtil(points, 0, n - 1);
+}
+
+int main()
+{
+    pair<int, int> points[] = {{0, 0}, {1, 0}, {2, 1}, {1, 2}, {0, 2}};
+    int n = sizeof(points) / sizeof(points[0]);
+
+    cout << minCost(points, n) << endl;
+    return 0;
+}
+
+// 15.3006

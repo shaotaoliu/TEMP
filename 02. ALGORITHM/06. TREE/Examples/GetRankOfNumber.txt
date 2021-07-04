@@ -1,0 +1,106 @@
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left, *right;
+
+    Node(int i)
+    {
+        data = i;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+Node *root = NULL;
+
+void insert(Node *&root, int x)
+{
+    if (root == NULL)
+    {
+        root = new Node(x);
+        return;
+    }
+
+    if (root->data > x)
+    {
+        insert(root->left, x);
+    }
+    else
+    {
+        insert(root->right, x);
+    }
+}
+
+Node *getRank(Node *root, int x, int &rank)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    Node *node = getRank(root->left, x, rank);
+
+    if (node != NULL)
+    {
+        return node;
+    }
+
+    if (root->data == x)
+    {
+        return root;
+    }
+
+    ++rank;
+    return getRank(root->right, x, rank);
+}
+
+void tract(int x)
+{
+    insert(root, x);
+}
+
+int getRankOfNumber(int x)
+{
+    int rank = 0;
+    getRank(root, x, rank);
+    return rank;
+}
+
+void inorder(Node *root)
+{
+    if (root != NULL)
+    {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+int main()
+{
+    int a[] = {1, 9, 5, 3, 7, 6, 8};
+    int n = sizeof(a) / sizeof(a[0]);
+
+    for (int i = 0; i < n; ++i)
+    {
+        cout << a[i] << "  ";
+    }
+
+    cout << endl;
+
+    for (int i = 0; i < n; ++i)
+    {
+        tract(a[i]);
+        cout << getRankOfNumber(a[i]) << "  ";
+    }
+}
+
+/*
+
+1  9  5  3  7  6  8
+0  1  1  1  3  3  5
+
+*/

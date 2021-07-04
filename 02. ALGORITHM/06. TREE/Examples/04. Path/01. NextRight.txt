@@ -1,0 +1,108 @@
+#include<bits/stdc++.h>
+#include<iostream>
+using namespace std;
+
+class Node
+{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+    Node *nextRight;
+
+    Node(int data)
+    {
+        this->data = data;
+        this->left = NULL;
+        this->right = NULL;
+        this->nextRight = NULL;
+    }
+};
+
+Node *getNextRight(Node *node)
+{
+    Node *temp = node->nextRight;
+
+    while (temp != NULL)
+    {
+        if (temp->left != NULL)
+        {
+            return temp->left;
+        }
+
+        if (temp->right != NULL)
+        {
+            return temp->right;
+        }
+
+        temp = temp->nextRight;
+    }
+
+    return NULL;
+}
+
+void connect(Node* node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    if (node->right)
+    {
+        node->right->nextRight = getNextRight(node);
+        connect(node->right);
+    }
+
+    if (node->left)
+    {
+        if (node->right)
+        {
+            node->left->nextRight = node->right;
+        }
+        else
+        {
+            node->left->nextRight = getNextRight(node);
+        }
+
+        connect(node->left);
+    }
+}
+
+void printNextRight(Node *n)
+{
+    while (n != NULL)
+    {
+        printf("%d -> ", n->data);
+        n = n->nextRight;
+    }
+    cout << "NULL" << endl;
+}
+
+int main()
+{
+    Node *root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(20);
+    root->left->left = new Node(3);
+    root->left->right = new Node(8);
+    root->right->right = new Node(25);
+    root->left->left->left = new Node(7);
+    root->right->right->right = new Node(30);
+
+    connect(root);
+
+    printNextRight(root);
+    printNextRight(root->left);
+    printNextRight(root->left->left);
+    printNextRight(root->left->left->left);
+}
+
+/*
+
+10 -> NULL
+5 -> 20 -> NULL
+3 -> 8 -> 25 -> NULL
+7 -> 30 -> NULL
+
+*/

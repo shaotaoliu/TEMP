@@ -1,0 +1,62 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+int getSteps(pair<int, int> start, pair<int, int> end, int N)
+{
+    int dx[] = {-2, -1, 1, 2, -2, -1, 1, 2};
+    int dy[] = {-1, -2, -2, -1, 1, 2, 2, 1};
+
+    bool visited[N+1][N+1];
+    memset(visited, false, sizeof(visited));
+
+    queue<pair<pair<int, int>, int>> q;
+    q.push({start, 0});
+    visited[start.first][start.second] = true;
+
+    while (!q.empty())
+    {
+        pair<int, int> p = q.front().first;
+        int d = q.front().second;
+        q.pop();
+
+        if (p.first == end.first && p.second == end.second)
+        {
+            return d;
+        }
+
+        for (int i = 0; i < 8; ++i)
+        {
+            int x = p.first + dx[i];
+            int y = p.second + dy[i];
+
+            if (x > 0 && x <= N && y > 0 && y <= N && !visited[x][y])
+            {
+                q.push({{x, y}, d + 1});
+                visited[x][y] = true;
+            }
+        }
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int N = 30;
+    pair<int, int> start = {1, 1};
+    pair<int, int> end = {30, 30};
+
+    int d = getSteps(start, end, N);
+    cout << d << endl;
+    return 0;
+}
+
+/*
+
+20
+
+*/

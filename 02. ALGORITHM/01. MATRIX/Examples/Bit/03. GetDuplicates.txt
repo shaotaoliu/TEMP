@@ -1,0 +1,65 @@
+#include <iostream>
+#include <list>
+#include <unordered_map>
+using namespace std;
+
+int getMask(int x)
+{
+    int mask = 0;
+    while (x > 0)
+    {
+        int digit = x % 10;
+        mask |= (1 << digit);
+        x /= 10;
+    }
+    return mask;
+}
+
+unordered_map<int, int> getFrequency(int a[], int n)
+{
+    unordered_map<int, int> m;
+    for (int i = 0; i < n; ++i)
+    {
+        int mask = getMask(a[i]);
+        m[mask]++;
+    }
+    return m;
+}
+
+int getDuplicates(int a[], int n)
+{
+    unordered_map<int, int> m = getFrequency(a, n);
+    int count = 0;
+
+    // O(1), because the max size of m is 1024
+    for (auto it = m.begin(); it != m.end(); ++it)
+    {
+        count += it->second * (it->second - 1) / 2;
+
+        auto it2 = it;
+        ++it2;
+        for (; it2 != m.end(); ++it2)
+        {
+            if (it->first & it2->first)
+            {
+                count += it->second * it2->second;
+            }
+        }
+    }
+
+    return count;
+}
+
+int main()
+{
+    int a[] = {10, 12, 24, 42};
+    int n = sizeof(a) / sizeof(a[0]);
+    int count = getDuplicates(a, n);
+    cout << count;
+}
+
+/*
+
+4
+
+*/

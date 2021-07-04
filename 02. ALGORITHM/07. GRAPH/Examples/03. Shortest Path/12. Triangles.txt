@@ -1,0 +1,61 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 4
+
+int countTriangle(int graph[V][V],  bool isDirected)
+{
+    int count = 0;
+
+    for (int i = 0; i < V; i++)
+    {
+        for (int j = 0; j < V; j++)
+        {
+            for (int k = 0; k < V; k++)
+            {
+                if (graph[i][j] && graph[j][k] && graph[k][i])
+                {
+                    ++count;
+                }
+            }
+        }
+    }
+
+    return isDirected ? count / 3 : count / 6;
+}
+
+int main()
+{
+    int graph[][V] = {{0, 1, 1, 0},
+                      {1, 0, 1, 1},
+                      {1, 1, 0, 1},
+                      {0, 1, 1, 0}};
+
+    cout << countTriangle(graph, false) << endl;
+
+    int digraph[][V] = {{0, 0, 1, 0},
+                        {1, 0, 0, 1},
+                        {0, 1, 0, 0},
+                        {0, 0, 1, 0}};
+
+    cout << countTriangle(digraph, true) << endl;
+
+    int graph2[V][V] = {{0, 1, 1, 1},
+                        {1, 0, 1, 1},
+                        {1, 1, 0, 1},
+                        {1, 1, 1, 0}};
+
+    cout << countTriangle(graph2, false) << endl;
+}
+
+/*
+
+2
+2
+4
+
+*/

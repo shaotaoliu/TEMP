@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+int merge(int a[], int low, int mid, int high)
+{
+    int temp[high - low + 1];
+    int invCount = 0;
+
+    int i = low;
+    int j = mid;
+    int k = 0;
+
+    while (i <= mid - 1 && j <= high)
+    {
+        if (a[i] <= a[j])
+        {
+            temp[k++] = a[i++];
+        }
+        else
+        {
+            temp[k++] = a[j++];
+            invCount = invCount + (mid - i);
+        }
+    }
+
+    while (i <= mid - 1)
+    {
+        temp[k++] = a[i++];
+    }
+
+    while (j <= high)
+    {
+        temp[k++] = a[j++];
+    }
+
+    for (i = low, j = 0; i <= high; ++i, ++j)
+    {
+        a[i] = temp[j];
+    }
+
+    return invCount;
+}
+
+int mergeSort(int a[], int low, int high)
+{
+    int invCount = 0;
+
+    if (low < high)
+    {
+        int mid = (low + high) / 2;
+
+        invCount = mergeSort(a, low, mid);
+        invCount += mergeSort(a, mid + 1, high);
+        invCount += merge(a, low, mid + 1, high);
+    }
+
+    return invCount;
+}
+
+int main()
+{
+    int a[] = { 1, 20, 6, 4, 5 };
+    int n = sizeof(a) / sizeof(a[0]);
+
+    int count = mergeSort(a, 0, n - 1);
+    cout << count << endl;
+}

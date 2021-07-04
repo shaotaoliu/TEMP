@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+struct Node
+{
+    char data;
+    int freq;
+    Node *left = NULL;
+    Node *right = NULL;
+
+    Node(char c, int freq)
+    {
+        this->data = c;
+        this->freq = freq;
+    }
+};
+
+struct FreqCompararor
+{
+    bool operator()(const Node *a, const Node *b)
+    {
+        return a->freq > b->freq;
+    }
+};
+
+Node* buildHuffmanTree(char a[], int freq[], int n)
+{
+    priority_queue<Node*, vector<Node*>, FreqCompararor> pq;
+
+    for (int i = 0; i < n; ++i)
+    {
+        pq.push(new Node(a[i], freq[i]));
+    }
+
+    while (pq.size() > 1)
+    {
+        Node *n1 = pq.top();
+        pq.pop();
+
+        Node *n2 = pq.top();
+        pq.pop();
+
+        Node *node = new Node(' ', n1->freq + n2->freq);
+        node->left = n1;
+        node->right = n2;
+        pq.push(node);
+    }
+
+    return pq.top();
+}
+
+void printHuffmanCode(Node *root, string pre)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    if (root->left == NULL && root->right == NULL)
+    {
+        cout << root->data << ": " << pre << endl;
+        return;
+    }
+
+    printHuffmanCode(root->left, pre + "0");
+    printHuffmanCode(root->right, pre + "1");
+}
+
+void huffmanCodes(char a[], int freq[], int n)
+{
+    Node *root = buildHuffmanTree(a, freq, n);
+    printHuffmanCode(root, "");
+}
+
+int main()
+{
+    char a[] = {'a', 'b', 'c', 'd', 'e', 'f'};
+    int freq[] = {5, 9, 12, 13, 16, 45};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    huffmanCodes(a, freq, n);
+}
+
+/*
+
+f: 0
+c: 100
+d: 101
+a: 1100
+b: 1101
+e: 111
+
+*/

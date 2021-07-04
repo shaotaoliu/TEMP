@@ -1,0 +1,69 @@
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left, *right;
+
+    Node(int d)
+    {
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+void preOrder(Node* node)
+{
+    if (node == NULL)
+    return;
+    printf("%d ", node->data);
+    preOrder(node->left);
+    preOrder(node->right);
+}
+
+Node *treeFromString(char str[], int n, int &index)
+{
+    Node *root = new Node(str[index] - '0');
+
+    ++index;
+    if (index < n && str[index] == '(')
+    {
+        ++index;                                             // skip '('
+        if (index < n && str[index] != ')')
+        {
+            root->left = treeFromString(str, n, index);
+        }
+        ++index;    // skip ')'
+
+        if (index < n && str[index] == '(')
+        {
+            ++index;    // skip '('
+            if (index < n && str[index] != ')')
+            {
+                root->right = treeFromString(str, n, index);
+            }
+            ++index;    // skip ')'
+        }
+    }
+
+    return root;
+}
+
+int main()
+{
+    char a[] = "4(2(3)(1))(6(5))";
+    //char a[] = "4()(2(3)(1))";
+    int n = sizeof(a) / sizeof(a[0]);
+
+    int index = 0;
+    Node *root = treeFromString(a, n-1, index);
+    preOrder(root);
+}
+
+/*
+
+4 2 3 1 6 5
+
+*/

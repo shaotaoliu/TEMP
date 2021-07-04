@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool canPairs(int a[], int n, int k)
+{
+    if (n & 1)
+    {
+        return false;
+    }
+
+    unordered_map<int, int> m;
+
+    for (int i = 0; i < n; ++i)
+    {
+        m[a[i] % k]++;
+    }
+
+    for (pair<int, int> p : m)
+    {
+        if (p.first == 0 || p.first * 2 == k)
+        {
+            if (p.second % 2 == 1)     // rem = 0 or k/2, the count must be even
+            {
+                return false;
+            }
+        }
+        else if (m[p.first] != m[k - p.first])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int main()
+{
+    int arr[] =  {92, 75, 65, 48, 45, 35};
+    int k = 10;
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    canPairs(arr, n, k) ? cout << "True": cout << "False";
+    return 0;
+}
+
+/*
+
+True
+
+*/

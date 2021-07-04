@@ -1,0 +1,68 @@
+#include <iostream>
+using namespace std;
+
+void wordWrap(int a[], int n, int width)
+{
+    int dp[n + 1];          // dp[i] is the total cost to wrap from word i to end
+    dp[n] = 0;
+
+    int end[n];             // end[i] is the index of the end word put in one line
+    end[n - 1] = n - 1;
+
+    for (int i = n - 1; i >= 0; --i)
+    {
+        int len = a[i];
+        int minx = INT_MAX;
+        int j = i;
+        int next = i;
+
+        while (j < n && len <= width)
+        {
+            int spaces = width - len;
+            int cost = spaces * spaces + dp[j + 1];
+
+            if (minx > cost)
+            {
+                minx = cost;
+                next = j;
+            }
+
+            ++j;
+            len += a[j] + 1;            // 1 is the space between two words
+        }
+
+        dp[i] = minx;                   // cost
+        end[i] = next;                  // the index of the ending word
+    }
+
+    int i = 0;
+    while (i < n)
+    {
+        printf("%d - %d\n", i, end[i]);
+        i = end[i] + 1;
+    }
+}
+
+int main()
+{
+    int a[] = {3, 2, 2, 5, 3, 4, 3, 1, 6, 3, 4, 8, 1, 4, 2, 5, 6};
+    int width = 8;
+
+    int n = sizeof(a) / sizeof(a[0]);
+    wordWrap(a, n, width);
+}
+
+/*
+
+0 - 1
+2 - 3
+4 - 5
+6 - 7
+8 - 8
+9 - 10
+11 - 11
+12 - 13
+14 - 15
+16 - 16
+
+*/

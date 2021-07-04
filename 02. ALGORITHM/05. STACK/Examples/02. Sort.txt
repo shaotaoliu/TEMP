@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void printStack(stack<int> &s)
+{
+    while (!s.empty())
+    {
+        int c = s.top();
+        s.pop();
+        cout << c << " ";
+    }
+}
+
+void sort_stack(stack<int> &s)
+{
+    stack<int> temp;
+
+    while (!s.empty())
+    {
+        int t = s.top();
+        s.pop();
+
+        while (!temp.empty() && temp.top() > t)
+        {
+            s.push(temp.top());
+            temp.pop();
+        }
+
+        temp.push(t);
+    }
+
+    while (!temp.empty())
+    {
+        s.push(temp.top());
+        temp.pop();
+    }
+}
+
+int main()
+{
+    stack<int> st;
+
+    st.push(3);
+    st.push(1);
+    st.push(6);
+    st.push(4);
+    st.push(5);
+    st.push(2);
+
+    sort_stack(st);
+    printStack(st);
+}
+
+/*
+
+1 2 3 4 5 6 
+
+*/

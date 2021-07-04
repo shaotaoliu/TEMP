@@ -1,0 +1,40 @@
+#include <iostream>
+using namespace std;
+
+void hanoi(int n, char a, char b, char c)
+{
+    if (n == 1)
+    {
+        printf("Move disk 1 from %c to %c\n", a, b);
+        return;
+    }
+
+    hanoi(n - 1, a, c, b);
+    printf("Move disk %d from %c to %c\n", n, a, b);
+    hanoi(n - 1, c, b, a);
+}
+
+int main()
+{
+    hanoi(4, 'A', 'B', 'C');
+}
+
+/*
+
+Move disk 1 from A to C
+Move disk 2 from A to B
+Move disk 1 from C to B
+Move disk 3 from A to C
+Move disk 1 from B to A
+Move disk 2 from B to C
+Move disk 1 from A to C
+Move disk 4 from A to B
+Move disk 1 from C to B
+Move disk 2 from C to A
+Move disk 1 from B to A
+Move disk 3 from C to B
+Move disk 1 from A to C
+Move disk 2 from A to B
+Move disk 1 from C to B
+
+*/

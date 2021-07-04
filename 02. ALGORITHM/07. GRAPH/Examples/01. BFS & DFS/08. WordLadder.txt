@@ -1,0 +1,74 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+bool diff1(string a, string b)
+{
+    int d = 0;
+
+    for (int i = 0; i < a.length(); ++i)
+    {
+        if (a[i] != b[i])
+        {
+            ++d;
+        }
+    }
+
+    return d == 1;
+}
+
+int shortestChainLen(string src, string dest, set<string> &ss)
+{
+    queue<pair<string, int>> q;
+    q.push({src, 1});
+    ss.erase(src);
+
+    while (!q.empty())
+    {
+        string curr = q.front().first;
+        int d = q.front().second;
+        q.pop();
+
+        if (curr == dest)
+        {
+            return d;
+        }
+
+        for (string str : ss)
+        {
+            if (diff1(curr, str))
+            {
+                if (str == dest)
+                {
+                    return d + 1;
+                }
+
+                q.push({str, d + 1});
+                ss.erase(str);
+            }
+        }
+    }
+
+    return -1;
+}
+
+int main()
+{
+    set<string> D;
+    D.insert("poon");
+    D.insert("plee");
+    D.insert("same");
+    D.insert("poie");
+    D.insert("plie");
+    D.insert("poin");
+    D.insert("plea");
+    string start = "toon";
+    string target = "plea";
+
+    int d = shortestChainLen(start, target, D);
+    cout << "Length: " << d;
+    return 0;
+}

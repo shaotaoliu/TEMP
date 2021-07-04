@@ -1,0 +1,59 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+int getMaxArea(int hist[], int n)
+{
+    stack<int> s;          // holds the indexes of the array elements
+    int maxx = 0;
+
+    for (int i = 0; i <= n; ++i)
+    {
+        while (!s.empty() && (i == n || hist[i] <= hist[s.top()]))
+        {
+            int hIndex = s.top();           // top is the index of element >= hist[i]
+            s.pop();
+
+            // top is the index of element < hist[hIndex]
+            int w = s.empty() ? i : (i - s.top() - 1);
+            maxx = max(maxx, hist[hIndex] * w);
+        }
+
+        if (i == n)
+        {
+            break;
+        }
+
+        s.push(i);
+    }
+
+    return maxx;
+}
+
+int main()
+{
+    int hist[] = {6, 6, 6, 6, 6, 6};
+    int n = sizeof(hist)/sizeof(hist[0]);
+    cout << "Maximum area is " << getMaxArea(hist, n);
+    cout << endl;
+
+    int hist2[] = {2, 1, 4, 3, 6, 1, 15};
+    int n2 = sizeof(hist2)/sizeof(hist2[0]);
+    cout << "Maximum area is " << getMaxArea(hist2, n2);
+    cout << endl;
+
+    int hist3[] = {2, 1, 4, 3, 6, 1, 5};
+    int n3 = sizeof(hist3)/sizeof(hist3[0]);
+    cout << "Maximum area is " << getMaxArea(hist3, n3);
+    cout << endl;
+
+    return 0;
+}
+
+/*
+
+Maximum area is 36
+Maximum area is 15
+Maximum area is 9
+
+*/

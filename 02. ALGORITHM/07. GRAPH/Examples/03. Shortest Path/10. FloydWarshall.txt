@@ -1,0 +1,54 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 4
+
+void floydWarshall(int a[][V])
+{
+    for (int k = 0; k < V; ++k)
+    {
+        for (int i = 0; i < V; ++i)
+        {
+            for (int j = 0; j < V; ++j)
+            {
+                if (a[i][k] != INT_MAX && a[k][j] != INT_MAX && a[i][k] + a[k][j] < a[i][j])
+                {
+                    a[i][j] = a[i][k] + a[k][j];
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < V; ++i)
+    {
+        for (int j = 0; j < V; ++j)
+        {
+            printf("%c ", a[i][j] == INT_MAX ? 'X' : (a[i][j] + '0'));
+        }
+        printf("\n");
+    }
+}
+
+int main()
+{
+    int graph[V][V] = {{    0,       5,    INT_MAX,  10    },
+                       { INT_MAX,    0,       3,   INT_MAX },
+                       { INT_MAX, INT_MAX,    0,     1     },
+                       { INT_MAX, INT_MAX, INT_MAX,  0     }};
+
+    floydWarshall(graph);
+    return 0;
+}
+
+/*
+
+0  5  8  9
+X  0  3  4
+X  X  0  1
+X  X  X  0
+
+*/

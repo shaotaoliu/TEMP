@@ -1,0 +1,77 @@
+#include <iostream>
+#include <list>
+#include <unordered_map>
+using namespace std;
+
+void printb(long long x, int k)
+{
+    if (x != 0)
+    {
+        printb(x >> 1, k+1);
+        cout << (x & 1);
+
+        if (k % 4 == 0)
+        {
+            cout << " ";
+        }
+    }
+}
+void printb(long long x)
+{
+    printb(x, 0);
+    cout << endl;
+}
+
+int getPrev(int n)
+{
+    int p1 = 0;
+    int p2 = 0;
+
+    while (n & 1)
+    {
+        ++p1;
+        n = n >> 1;              // 1010 00
+    }
+
+    // if n = 0 or all 1's
+    if (n == 0)
+    {
+        return -1;
+    }
+
+    while (n > 0 && (n & 1) == 0)
+    {
+        ++p2;
+        n = n >> 1;              // 101
+    }
+
+    int a = -1 << (p1 + 1);      // 1111 1000
+    int b = ~a;                  // 0000 0111
+    int c = b << (p2 - 1);       // 0001 1100
+    int d = n - 1;               // 100
+    int e = d << (p1 + p2);      // 1000 0000
+
+    return e | c;                // 1001 1100
+}
+
+int main()
+{
+    int n = 0b10100011;
+    int a = getPrev(n);
+    printb(a);
+    cout << a << endl;
+
+    n = 0b10001000;
+    a = getPrev(n);
+    printb(a);
+    cout << a << endl;
+}
+
+/*
+
+1001 1100
+156
+1000 0100
+132
+
+*/

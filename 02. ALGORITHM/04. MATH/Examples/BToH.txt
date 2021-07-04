@@ -1,0 +1,85 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+using namespace std;
+
+unordered_map<string, char> createMap()
+{
+    unordered_map<string, char> m;
+
+    m["0000"] = '0';
+    m["0001"] = '1';
+    m["0010"] = '2';
+    m["0011"] = '3';
+    m["0100"] = '4';
+    m["0101"] = '5';
+    m["0110"] = '6';
+    m["0111"] = '7';
+    m["1000"] = '8';
+    m["1001"] = '9';
+    m["1010"] = 'A';
+    m["1011"] = 'B';
+    m["1100"] = 'C';
+    m["1101"] = 'D';
+    m["1110"] = 'E';
+    m["1111"] = 'F';
+
+    return m;
+}
+
+string btoh(string s)
+{
+    int dot = 0;
+    while (dot < s.length() && s[dot] != '.')
+    {
+        ++dot;
+    }
+
+    int len1 = 4 - dot % 4;
+    int len2 = 4 - (s.length() - dot - 1) % 4;
+
+    for (int i = 0; i < len1; ++i)
+    {
+        s = "0" + s;
+    }
+
+    if (dot != s.length())
+    {
+        for (int i = 0; i < len2; ++i)
+        {
+            s = s + '0';
+        }
+    }
+
+    unordered_map<string, char> m = createMap();
+    string res = "";
+
+    int i = 0;
+    while (i < s.length())
+    {
+        if (s[i] == '.')
+        {
+            res += '.';
+            ++i;
+        }
+        else
+        {
+            res += m[s.substr(i, 4)];
+            i += 4;
+        }
+    }
+
+    return res;
+}
+
+int main()
+{
+    string bin = "1111001010010100001.010110110011011";
+    cout << btoh(bin) << endl;
+}
+
+/*
+
+794A1.5B36
+
+*/

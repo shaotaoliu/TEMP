@@ -1,0 +1,81 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 4
+
+bool isSafe(bool graph[][V], int color[], int v, int c)
+{
+    for (int i = 0; i < V; ++i)
+    {
+        if (graph[v][i] == 1 && color[i] == c)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool findUtil(bool graph[][V], int m, int color[], int v)
+{
+    if (v == V)
+    {
+        return true;
+    }
+
+    for (int i = 1; i <= m; ++i)          // color 1 - m
+    {
+        if (isSafe(graph, color, v, i))
+        {
+            color[v] = i;
+
+            if (findUtil(graph, m, color, v + 1))
+            {
+                return true;
+            }
+
+            color[v] = 0;
+        }
+    }
+
+    return false;
+}
+
+bool findColor(bool graph[V][V], int m)
+{
+    int color[V] = {0};
+
+    if (findUtil(graph, m, color, 0) == false)
+    {
+        cout << "Not found";
+        return false;
+    }
+
+    for (int i = 0; i < V; ++i)
+    {
+        printf("%d, ", color[i]);
+    }
+
+    return true;
+}
+
+int main()
+{
+    bool graph[V][V] = {{0, 1, 1, 1},
+                        {1, 0, 1, 0},
+                        {1, 1, 0, 1},
+                        {1, 0, 1, 0}};
+
+    int m = 3; // Number of colors
+    findColor(graph, m);
+}
+
+/*
+
+1, 2, 3, 2,
+
+*/

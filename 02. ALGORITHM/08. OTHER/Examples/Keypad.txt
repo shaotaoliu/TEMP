@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int getCount(int keypad[][3], int n)
+{
+    vector<int> nums[10];
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            if (keypad[i][j] != -1)
+            {
+                if (i > 0 && keypad[i - 1][j] != -1) nums[keypad[i][j]].push_back(keypad[i - 1][j]);
+                if (j > 0 && keypad[i][j - 1] != -1) nums[keypad[i][j]].push_back(keypad[i][j - 1]);
+                if (i < 3 && keypad[i + 1][j] != -1) nums[keypad[i][j]].push_back(keypad[i + 1][j]);
+                if (j < 2 && keypad[i][j + 1] != -1) nums[keypad[i][j]].push_back(keypad[i][j + 1]);
+            }
+        }
+    }
+
+    int dp[n+1][10];
+    memset(dp, 0, sizeof(dp));
+
+    for (int i = 0; i < 10; ++i)
+    {
+        dp[1][i] = 1;
+    }
+
+    for (int i = 2; i <= n; ++i)                // O(n)
+    {
+        for (int j = 0; j < 10; ++j)            // O(1)
+        {
+            dp[i][j] = dp[i-1][j];
+
+            for (int k : nums[j])               // O(1)
+            {
+                dp[i][j] += dp[i-1][k];
+            }
+        }
+    }
+
+    int count = 0;
+    for (int i = 0; i < 10; ++i)
+    {
+        count += dp[n][i];
+    }
+
+    return count;
+}
+
+int main()
+{
+    int keypad[4][3] = {{1, 2, 3},
+                        {4, 5, 6},
+                        {7, 8, 9},
+                        {-1, 0, -1}};       // * and #
+
+    printf("%d\n", getCount(keypad, 1));
+    printf("%d\n", getCount(keypad, 2));
+    printf("%d\n", getCount(keypad, 3));
+    printf("%d\n", getCount(keypad, 4));
+    printf("%d\n", getCount(keypad, 5));
+}
+
+/*
+
+10
+36
+138
+532
+2062
+
+*/

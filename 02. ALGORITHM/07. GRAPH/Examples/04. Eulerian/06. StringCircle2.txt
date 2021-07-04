@@ -1,0 +1,94 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define M 26
+
+void dfs(vector<int> graph[], int src, bool visited[])
+{
+    visited[src] = true;
+
+    for (int i = 0; i < graph[src].size(); ++i)
+    {
+        if (!visited[graph[src][i]])
+        {
+            dfs(graph, graph[src][i], visited);
+        }
+    }
+}
+
+//  Returns true if all vertices are strongly connected, i.e. can be made as loop
+bool isConnected(vector<int> graph[], bool marked[], int src)
+{
+    bool visited[26];
+    memset(visited, false, sizeof(visited));
+
+    dfs(graph, src, visited);
+
+    for (int i = 0; i < 26; ++i)
+    {
+        if (marked[i] && !visited[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool circled(string a[], int n)
+{
+    vector<int> graph[26];
+    bool marked[26];
+    memset(marked, false, sizeof(marked));
+
+    int in[26] = {0};
+    int out[26] = {0};
+
+    for (int i = 0; i < n; ++i)
+    {
+        int first = a[i].front() - 'a';
+        int last = a[i].back() - 'a';
+
+        marked[first] = true;
+        marked[last] = true;
+
+        out[first]++;
+        in[last]++;
+
+        graph[first].push_back(last);
+    }
+
+    for (int i = 0; i < 26; ++i)
+    {
+        if (in[i] != out[i])
+        {
+            return false;
+        }
+    }
+
+    return isConnected(graph, marked, a[0].front() - 'a');
+}
+
+int main()
+{
+    string a[] = {"abc", "efg", "cde", "ghi", "ija"};
+    int n = sizeof(a) / sizeof(a[0]);
+    bool val1 = circled(a, n);
+    cout << (val1 ? "Yes" : "No") << endl;
+
+    string b[] = {"aab", "bca", "abb"};
+    n = sizeof(b) / sizeof(b[0]);
+    bool val2 = circled(a, n);
+    cout << (val2 ? "Yes" : "No") << endl;
+}
+
+/*
+
+Yes
+No
+
+*/

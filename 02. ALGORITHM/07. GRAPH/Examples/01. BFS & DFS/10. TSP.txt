@@ -1,0 +1,57 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 4
+
+void DFSUtil(int g[][V], int u, int start, bool visited[], int k, int sum, int &minSum)
+{
+    visited[u] = true;
+
+    for (int v = 0; v < V; ++v)
+    {
+        if (v == start && k == 1)
+        {
+            if (minSum > sum + g[u][v])
+            {
+                minSum = sum + g[u][v];
+            }
+        }
+        else if (visited[v] == false)
+        {
+            DFSUtil(g, v, start, visited, k - 1, g[u][v] + sum, minSum);
+        }
+    }
+
+    visited[u] = false;
+}
+
+int TSP(int graph[][V], int start)
+{
+    bool visit[V];
+    memset(visit, false, sizeof(visit));
+    int minSum;
+
+    DFSUtil(graph, start, start, visit, V, 0, minSum);
+    return minSum;
+}
+
+int main()
+{
+    int graph[][V] = {{ 0, 10, 15, 20 },
+                      { 10, 0, 35, 25 },
+                      { 15, 35, 0, 30 },
+                      { 20, 25, 30, 0 }};
+
+    int d = TSP(graph, 0);
+    cout << d << endl;
+}
+
+/*
+
+80
+
+*/

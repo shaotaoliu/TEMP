@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 5
+
+void primMST(int g[V][V])
+{
+    vector<pair<int, int>> edges;
+    unordered_set<int> s;
+    s.insert(0);
+
+    while (s.size() < V)
+    {
+        int m = INT_MAX;
+        int u, v;
+
+        for (int i : s)
+        {
+            for (int j = 0; j < V; ++j)
+            {
+                if (s.find(j) == s.end() && g[i][j] > 0 && g[i][j] < m)
+                {
+                    m = g[i][j];
+                    u = i;
+                    v = j;
+                }
+            }
+        }
+
+        edges.push_back({u, v});
+        s.insert(v);
+    }
+
+    for (pair<int, int> e : edges)
+    {
+        printf("%d - %d : %d\n", e.first, e.second, g[e.first][e.second]);
+    }
+}
+
+int main()
+{
+    int graph[V][V] = { { 0, 2, 0, 6, 0 },
+                        { 2, 0, 3, 8, 5 },
+                        { 0, 3, 0, 0, 7 },
+                        { 6, 8, 0, 0, 9 },
+                        { 0, 5, 7, 9, 0 } };
+
+    primMST(graph);
+    return 0;
+}
+
+/*
+
+0 - 1 : 2
+1 - 2 : 3
+1 - 4 : 5
+0 - 3 : 6
+
+*/

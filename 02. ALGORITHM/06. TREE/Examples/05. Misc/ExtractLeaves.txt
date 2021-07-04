@@ -1,0 +1,100 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node
+{
+    public:
+    int data;
+    Node *left, *right;
+};
+
+Node* newNode(int data)
+{
+    Node* node = new Node();
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+void print(Node *root)
+{
+    if (root != NULL)
+    {
+        print(root->left);
+        cout << root->data << " ";
+        print(root->right);
+    }
+}
+
+void printList(Node *head)
+{
+    while (head)
+    {
+        cout<<head->data<<" ";
+        head = head->right;
+    }
+}
+
+Node *extract(Node *root, Node **head)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    if (root->left == NULL && root->right == NULL)
+    {
+        root->right = *head;
+
+        if (*head != NULL)
+        {
+            (*head)->left = root;
+        }
+
+        *head = root;
+        return NULL;            // extract the leaf node
+    }
+
+    root->right = extract(root->right, head);
+    root->left = extract(root->left, head);
+
+    return root;
+}
+
+int main()
+{
+    Node *head = NULL;
+    Node *root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->right->right = newNode(6);
+    root->left->left->left = newNode(7);
+    root->left->left->right = newNode(8);
+    root->right->right->left = newNode(9);
+    root->right->right->right = newNode(10);
+
+    cout << "Inorder Trvaersal of given Tree is:\n";
+    print(root);
+
+    root = extract(root, &head);
+
+    cout << "\nExtracted Double Linked list is:\n";
+    printList(head);
+
+    cout << "\nInorder traversal of modified tree is:\n";
+    print(root);
+    return 0;
+}
+
+/*
+
+Inorder Trvaersal of given Tree is:
+7 4 8 2 5 1 3 9 6 10
+Extracted Double Linked list is:
+7 8 5 9 10
+Inorder traversal of modified tree is:
+4 2 1 3 6
+
+*/

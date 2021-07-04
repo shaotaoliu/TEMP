@@ -1,0 +1,145 @@
+#include <iostream>
+using namespace std;
+
+struct Point
+{
+    int x, y;
+};
+
+int orientation(Point p, Point q, Point r)
+{
+    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+    if (val == 0)
+    {
+        return 0;
+    }
+
+    return (val > 0)? 1: 2;
+}
+
+bool inRange(Point A, Point B, Point C)
+{
+    return C.x >= min(A.x, B.x) && C.x <= max(A.x, B.x) &&
+    C.y >= min(A.y, B.y) && C.y <= max(A.y, B.y);
+}
+
+bool onSegment(Point A, Point B, Point C)
+{
+    return orientation(A, B, C) == 0 && inRange(A, B, C);
+}
+
+bool intersect(Point A, Point B, Point P, Point Q)
+{
+    int o1 = orientation(A, B, P);
+    int o2 = orientation(A, B, Q);
+    int o3 = orientation(P, Q, A);
+    int o4 = orientation(P, Q, B);
+
+    if (o1 != o2 && o3 != o4)
+    {
+        return true;
+    }
+
+    if (o1 == 0 && inRange(A, B, P))
+    {
+        return true;
+    }
+
+    if (o2 == 0 && inRange(A, B, Q))
+    {
+        return true;
+    }
+
+    if (o3 == 0 && inRange(P, Q, A))
+    {
+        return true;
+    }
+
+    if (o4 == 0 && inRange(P, Q, B))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool inPolygon(Point polygon[], int n, Point p)
+{
+    if (n < 3)
+    {
+        return false;
+    }
+
+    // find the maximum x of the vertices:
+    int maxX = polygon[0].x;
+    for (int i = 1; i < n; ++i)
+    {
+        maxX = max(maxX, polygon[i].x);
+    }
+
+    Point q = {maxX + 1, p.y};
+    int count = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        int next = i == n - 1 ? 0 : i + 1;
+
+        if (onSegment(polygon[i], polygon[next], p))
+        {
+            return true;
+        }
+
+        if (polygon[i].y == p.y && polygon[next].y == p.y)      // consider both below or above the horizontal line
+        {
+            continue;
+        }
+
+        if (intersect(polygon[i], polygon[next], p, q) && (polygon[i].y < p.y || polygon[next].y < p.y))
+        {
+            ++count;
+        }
+    }
+
+    return count % 2 == 1;
+}
+
+void test(Point polygon1[], int n, Point p)
+{
+    printf("(%d, %d): ", p.x, p.y);
+    inPolygon(polygon1, n, p)? cout << "Yes \n": cout << "No \n";
+}
+
+int main()
+{
+    Point polygon1[] = {{1, 1}, {6, 1}, {6, 2}, {4, 2}, {5, 3}, {3, 5}, {1, 3}, {2, 2}};
+    int n = sizeof(polygon1)/sizeof(polygon1[0]);
+
+    test(polygon1, n, {3, 6});
+    test(polygon1, n, {3, 5});
+    test(polygon1, n, {0, 5});
+    test(polygon1, n, {0, 4});
+    test(polygon1, n, {3, 4});
+    test(polygon1, n, {0, 3});
+    test(polygon1, n, {3, 3});
+    test(polygon1, n, {0, 2});
+    test(polygon1, n, {3, 2});
+    test(polygon1, n, {7, 2});
+    test(polygon1, n, {0, 1});
+}
+
+/*
+
+(3, 6): No
+(3, 5): Yes
+(0, 5): No
+(0, 4): No
+(3, 4): Yes
+(0, 3): No
+(3, 3): Yes
+(0, 2): No
+(3, 2): Yes
+(7, 2): No
+(0, 1): No
+
+*/

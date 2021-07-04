@@ -1,0 +1,115 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+struct Edge
+{
+    int src;
+    int dest;
+    int weight;
+};
+
+class Graph
+{
+    int V;
+    vector<Edge> edge;
+
+public:
+    Graph(int v)
+    {
+        V = v;
+    }
+
+    void add_edge(int u, int v, int w)
+    {
+        edge.push_back({u, v, w});
+    }
+
+    void Kruskal();
+};
+
+bool comp(Edge a, Edge b)
+{
+    return a.weight < b.weight;
+}
+
+int find(int parent[], int i)
+{
+    if (parent[i] == -1)
+    {
+        return i;
+    }
+
+    return find(parent, parent[i]);
+}
+
+bool hasCycle(int V, vector<Edge> edges)
+{
+    int parent[V];
+    memset(parent, -1, sizeof(parent));
+
+    for (Edge e : edges)
+    {
+        int i = find(parent, e.src);
+        int j = find(parent, e.dest);
+
+        if (i == j)
+        {
+            return true;
+        }
+
+        parent[i] = j;
+    }
+
+    return false;
+}
+
+void Graph::Kruskal()
+{
+    sort(edge.begin(), edge.end(), comp);
+    vector<Edge> vec;
+
+    for (auto e : edge)
+    {
+        vec.push_back(e);
+
+        if (hasCycle(V, vec))
+        {
+            vec.pop_back();
+        }
+
+        if (vec.size() == V - 1)
+        {
+            break;
+        }
+    }
+
+    for (auto e : vec)
+    {
+        printf("%d - %d : %d\n", e.src, e.dest, e.weight);
+    }
+}
+
+int main()
+{
+    Graph g = Graph(4);
+    g.add_edge(0, 1, 10);
+    g.add_edge(0, 2, 6);
+    g.add_edge(0, 3, 5);
+    g.add_edge(1, 3, 15);
+    g.add_edge(2, 3, 4);
+
+    g.Kruskal();
+    return 0;
+}
+
+/*
+
+2 - 3 : 4
+0 - 3 : 5
+0 - 1 : 10
+
+*/

@@ -1,0 +1,97 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+bool findUtil(vector<vector<int>> adj, int u, int start, unordered_map<int, unordered_set<int>> &um, int E)
+{
+    for (int v : adj[u])
+    {
+        if (um.find(u) == um.end() || um[u].find(v) == um[u].end())
+        {
+            if (E == 1 && v == start)
+            {
+                printf("%d - %d\n", u, v);
+                return true;
+            }
+
+            um[u].insert(v);
+
+            if (findUtil(adj, v, start, um, E - 1))
+            {
+                printf("%d - %d\n", u, v);
+                return true;
+            }
+
+            um[u].erase(v);
+        }
+    }
+
+    return false;
+}
+
+void find(vector<vector<int>> adj)
+{
+    int E = 0;
+    for (int i = 0; i < adj.size(); ++i)
+    {
+        E += adj[i].size();
+    }
+
+    unordered_map<int, unordered_set<int>> um;
+
+    if (findUtil(adj, 0, 0, um, E) == false)
+    {
+        cout << "Not found" << endl;
+    }
+}
+
+int main()
+{
+    vector<vector<int>> adj;
+
+    adj.resize(7);
+    adj[0].push_back(1);
+    adj[0].push_back(6);
+    adj[1].push_back(2);
+    adj[2].push_back(0);
+    adj[2].push_back(3);
+    adj[3].push_back(4);
+    adj[4].push_back(2);
+    adj[4].push_back(5);
+    adj[5].push_back(0);
+    adj[6].push_back(4);
+
+    cout << "Edges:" << endl;
+    find(adj);
+
+    vector<vector<int>> adj2;
+
+    adj2.resize(3);
+    adj2[0].push_back(1);
+    adj2[1].push_back(2);
+
+    cout << "\nEdges:" << endl;
+    find(adj2);
+}
+
+/*
+
+Edges:
+5 - 0
+4 - 5
+3 - 4
+2 - 3
+4 - 2
+6 - 4
+0 - 6
+2 - 0
+1 - 2
+0 - 1
+
+Edges:
+Not found
+
+*/

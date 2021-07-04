@@ -1,0 +1,150 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node
+{
+    public:
+    int data;
+    Node *next, *prev;
+};
+
+void insert(Node **head, int data)
+{
+    Node *temp = new Node();
+    temp->data = data;
+    temp->next = temp->prev = NULL;
+    if (!(*head))
+    (*head) = temp;
+    else
+    {
+        temp->next = *head;
+        (*head)->prev = temp;
+        (*head) = temp;
+    }
+}
+
+void print(Node *head)
+{
+    Node *temp = head;
+    cout<<"Forward Traversal using next poitner\n";
+    while (head)
+    {
+        cout << head->data << " ";
+        temp = head;
+        head = head->next;
+    }
+    cout  << "\n\nBackward Traversal using prev pointer\n";
+    while (temp)
+    {
+        cout << temp->data << " ";
+        temp = temp->prev;
+    }
+}
+
+Node *merge(Node *a, Node *b)
+{
+    if (a == NULL)
+    {
+        return b;
+    }
+
+    if (b == NULL)
+    {
+        return a;
+    }
+
+    Node *head;
+    if (a->data < b->data)
+    {
+        head = a;
+        a = a->next;
+    }
+    else
+    {
+        head = b;
+        b = b->next;
+    }
+
+    Node *p = head;
+    while (a != NULL && b != NULL)
+    {
+        if (a->data < b->data)
+        {
+            p->next = a;
+            a->prev = p;
+            p = a;
+            a = a->next;
+        }
+        else
+        {
+            p->next = b;
+            b->prev = p;
+            p = b;
+            b = b->next;
+        }
+    }
+
+    if (a != NULL)
+    {
+        p->next = a;
+        a->prev = p;
+    }
+
+    if (b != NULL)
+    {
+        p->next = b;
+        b->prev = p;
+    }
+
+    return head;
+}
+
+Node *mergeSort(Node *head)
+{
+    if (head == NULL || head->next == NULL)
+    {
+        return head;
+    }
+
+    // find the middle node
+    Node *p = head;
+    Node *q = head;
+    while (p != NULL && p->next != NULL)
+    {
+        p = p->next->next;
+        q = q->next;
+    }
+
+    // split the doubly linked list
+    q->prev->next = NULL;
+    q->prev = NULL;
+
+    head = mergeSort(head);
+    q = mergeSort(q);
+
+    return merge(head, q);
+}
+
+int main(void)
+{
+    Node *head = NULL;
+    insert(&head, 5);
+    insert(&head, 20);
+    insert(&head, 4);
+    insert(&head, 3);
+    insert(&head, 30);
+    insert(&head, 10);
+    head = mergeSort(head);
+    print(head);
+    return 0;
+}
+
+/*
+
+Forward Traversal using next poitner
+3 4 5 10 20 30
+
+Backward Traversal using prev pointer
+30 20 10 5 4 3
+
+*/

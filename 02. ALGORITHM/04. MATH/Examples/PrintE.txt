@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+void printE(char s[], int n)
+{
+    int first = -1;
+    int last = -1;
+    int dot = n;
+
+    for (int i = 0; i < n; ++i)
+    {
+        if (s[i] == '.')
+        {
+            dot = i;
+        }
+        else if (s[i] != '0')
+        {
+            if (first == -1)
+            {
+                first = i;
+            }
+
+            last = i;
+        }
+    }
+
+    if (first == -1)
+    {
+        printf("0");
+        return;
+    }
+
+    printf("%c.", s[first]);
+
+    for (int i = first + 1; i <= last; ++i)
+    {
+        if (s[i] != '.')
+        {
+            printf("%c", s[i]);
+        }
+    }
+
+    int e = dot - first;
+    if (e > 0)
+    {
+        --e;
+    }
+
+    if (e != 0)
+    {
+        printf("E%d", e);
+    }
+}
+
+int main()
+{
+    char *a[] = {"0", "000", "0.00", "000.000", ".000", "000.",
+                 "123", "0012300", "1230045", "0102030",
+                 "00.12300", "0.0012300", "0.123", ".00123", ".12300",
+                 "123.", "12300.00", "123.00", "12300.0045"};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    for (int i = 0; i < n; ++i)
+    {
+        int len = strlen(a[i]);
+        printE(a[i], len);
+        cout << endl;
+    }
+}
+
+/*
+
+0
+0
+0
+0
+0
+0
+1.23E2
+1.23E4
+1.230045E6
+1.0203E5
+1.23E-1
+1.23E-3
+1.23E-1
+1.23E-3
+1.23E-1
+1.23E2
+1.23E4
+1.23E2
+1.23000045E4
+
+*/

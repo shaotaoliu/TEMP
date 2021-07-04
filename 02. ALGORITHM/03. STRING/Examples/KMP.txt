@@ -1,0 +1,86 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <stack>
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+// create the longest prefix suffix array:
+void computeLPSArray(char pat[], int n, int lps[])
+{
+    lps[0] = 0;         // lps[0] is always 0
+
+    int len = 0;
+    int i = 1;
+
+    while (i < n)
+    {
+        if (pat[i] == pat[len])
+        {
+            ++len;
+            lps[i] = len;
+            ++i;
+        }
+        else if (len == 0)
+        {
+            lps[i] = 0;
+            ++i;
+        }
+        else
+        {
+            len = lps[len - 1];
+        }
+    }
+}
+
+void KMPSearch(char txt[], char pat[], int m, int n)
+{
+    int lps[n];
+    int i = 0;
+    int j = 0;
+
+    computeLPSArray(pat, n, lps);
+
+    while (i < m)
+    {
+        if (txt[i] == pat[j])
+        {
+            ++i;
+            ++j;
+
+            if (j == n)
+            {
+                printf("Found pattern at index %d\n", i - j);
+                j = lps[j - 1];
+            }
+        }
+        else                // txt[i] != pat[j]
+        {
+            if (j != 0)
+            {
+                j = lps[j - 1];
+            }
+            else
+            {
+                ++i;
+            }
+        }
+    }
+}
+
+int main()
+{
+    char txt[] = "ABXABCABCABY";
+    char pat[] = "ABCABY";
+
+    KMPSearch(txt, pat, strlen(txt), strlen(pat));
+}
+
+/*
+
+Found pattern at index 6
+
+*/

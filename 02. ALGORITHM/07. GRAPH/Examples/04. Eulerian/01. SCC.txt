@@ -1,0 +1,129 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+class Graph
+{
+    int V;    // No. of vertices
+    list<int> *adj;
+    void fillOrder(int v, bool visited[], stack<int> &Stack);
+    void DFSUtil(int v, bool visited[]);
+
+    public:
+    Graph(int V);
+    void addEdge(int v, int w);
+    void printSCCs();
+    Graph getTranspose();
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w);
+}
+
+void Graph::fillOrder(int u, bool visited[], stack<int> &s)
+{
+    visited[u] = true;
+
+    for (int v : adj[u])
+    {
+        if (!visited[v])
+        {
+            fillOrder(v, visited, s);
+        }
+    }
+
+    s.push(u);
+}
+
+Graph Graph::getTranspose()
+{
+    Graph g(V);
+
+    for (int u = 0; u < V; ++u)
+    {
+        for (int v : adj[u])
+        {
+            g.adj[v].push_back(u);
+        }
+    }
+
+    return g;
+}
+
+void Graph::DFSUtil(int u, bool visited[])
+{
+    visited[u] = true;
+    printf("%d ", u);
+
+    for (int v : adj[u])
+    {
+        if (!visited[v])
+        {
+            DFSUtil(v, visited);
+        }
+    }
+}
+
+void Graph::printSCCs()
+{
+    bool visited[V];
+    memset(visited, false, sizeof(visited));
+
+    stack<int> s;
+    for (int i = 0; i < V; ++i)
+    {
+        if (visited[i] == false)
+        {
+            fillOrder(i, visited, s);
+        }
+    }
+
+    Graph gr = getTranspose();
+    memset(visited, false, sizeof(visited));
+
+    while (!s.empty())
+    {
+        int v = s.top();
+        s.pop();
+
+        if (visited[v] == false)
+        {
+            gr.DFSUtil(v, visited);
+            cout << endl;
+        }
+    }
+}
+
+int main()
+{
+    Graph g(5);
+    g.addEdge(1, 0);
+    g.addEdge(0, 2);
+    g.addEdge(2, 1);
+    g.addEdge(0, 3);
+    g.addEdge(3, 4);
+
+    cout << "Strongly connected components: \n";
+    g.printSCCs();
+
+    return 0;
+}
+
+/*
+
+Strongly connected components:
+0 1 2
+3
+4
+
+*/

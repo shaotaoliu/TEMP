@@ -1,0 +1,80 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define V 9
+
+void BFS(vector<pair<int, int>> edges[], int src)
+{
+    int dist[V];
+    for (int i = 0; i < V; ++i)
+    {
+        dist[i] = INT_MAX;
+    }
+
+    dist[src] = 0;
+    list<int> lst;
+    lst.push_back(src);
+
+    while (!lst.empty())
+    {
+        int u = lst.front();
+        lst.pop_front();
+
+        for (vector<pair<int, int>>::iterator it = edges[u].begin(); it != edges[u].end(); ++it)
+        {
+            if (dist[it->first] > dist[u] + it->second)
+            {
+                dist[it->first] = dist[u] + it->second;
+
+                // if the weight is 0, push it to front; otherwise, push to end
+                if (it->second == 0)
+                lst.push_front(it->first);
+                else
+                lst.push_back(it->first);
+            }
+        }
+    }
+
+    for (int i = 0; i < V; ++i)
+    {
+        cout << dist[i] << ", ";
+    }
+}
+
+void add_edge(vector<pair<int, int>> edges[], int u, int v, int wt)
+{
+    edges[u].push_back({v, wt});
+    edges[v].push_back({u, wt});
+}
+
+int main()
+{
+    vector<pair<int, int>> edges[V];
+    add_edge(edges, 0, 1, 0);
+    add_edge(edges, 0, 7, 1);
+    add_edge(edges, 1, 7, 1);
+    add_edge(edges, 1, 2, 1);
+    add_edge(edges, 2, 3, 0);
+    add_edge(edges, 2, 5, 0);
+    add_edge(edges, 2, 8, 1);
+    add_edge(edges, 3, 4, 1);
+    add_edge(edges, 3, 5, 1);
+    add_edge(edges, 4, 5, 1);
+    add_edge(edges, 5, 6, 1);
+    add_edge(edges, 6, 7, 1);
+    add_edge(edges, 7, 8, 1);
+
+    int src = 0;
+    BFS(edges, src);
+    return 0;
+}
+
+/*
+
+0, 0, 1, 1, 2, 1, 2, 1, 2,
+
+*/

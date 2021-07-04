@@ -1,0 +1,194 @@
+#include <iostream>
+using namespace std;
+
+class stack3
+{
+    int *arr;               // the array
+    int size;               // the size of the array
+
+    int top1;
+    int top2;
+    int top3;               // the size of stack 3
+    int base3;              // the bottom of stack 3
+
+public:
+    stack3(int n)
+    {
+        arr = new int[n];
+        size = n;
+
+        top1 = -1;
+        top2 = size;
+        base3 = size / 3;
+        top3 = base3 - 1;
+
+        for (int i = 0; i < n; ++i)
+        {
+            arr[i] = 0;
+        }
+    }
+
+    void push(int k, int x)
+    {
+        if (top1 - top2 + top3 - base3 + 2 == 0)
+        {
+            cout << "stack is full" << endl;
+            return;
+        }
+
+        if (k == 1)
+        {
+            ++top1;
+            if (top1 == base3)
+            {
+                shift3Up();
+            }
+
+            arr[top1] = x;
+        }
+        else if (k == 2)
+        {
+            --top2;
+            if (top2 == top3)
+            {
+                shift3Down();
+            }
+
+            arr[top2] = x;
+        }
+        else
+        {
+            ++top3;
+            if (top3 == top2)
+            {
+                shift3Down();
+            }
+
+            arr[top3] = x;
+        }
+    }
+
+    void shift3Up()
+    {
+        for (int i = top3 + 1; i > base3; --i)
+        {
+            arr[i] = arr[i-1];
+        }
+
+        ++top3;
+        ++base3;
+    }
+
+    void shift3Down()
+    {
+        for (int i = base3 - 1; i < top3; ++i)
+        {
+            arr[i] = arr[i+1];
+        }
+
+        --top3;
+        --base3;
+    }
+
+    int pop(int k)
+    {
+        if (k == 1 && top1 == -1 || k == 2 && top2 == size || k == 3 && top3 < base3)
+        {
+            cout << "stack is empty" << endl;
+            return -1;
+        }
+
+        int x;
+
+        if (k == 1)
+        {
+            x = arr[top1];
+            arr[top1] = 0;
+            --top1;
+        }
+        else if (k == 2)
+        {
+            x = arr[top2];
+            arr[top2] = 0;
+            ++top2;
+        }
+        else
+        {
+            x = arr[top3];
+            arr[top3] = 0;
+            --top3;
+        }
+
+        return x;
+    }
+
+    void print()
+    {
+        for (int i = 0; i < size; ++i)
+        {
+            printf("%d, ", arr[i]);
+        }
+        cout << endl;
+    }
+};
+
+int main()
+{
+    stack3 s(20);
+    s.push(1, 11);
+    s.push(1, 12);
+    s.push(1, 13);
+    s.push(1, 14);
+    s.push(1, 15);
+
+    s.push(2, 21);
+    s.push(2, 22);
+    s.push(2, 23);
+    s.push(2, 24);
+    s.push(2, 25);
+
+    s.push(3, 31);
+    s.push(3, 32);
+    s.push(3, 33);
+    s.push(3, 34);
+    s.push(3, 35);
+
+    s.print();
+
+    s.push(1, 16);
+    s.push(1, 17);
+    s.push(1, 18);
+
+    s.print();
+
+    s.pop(1);
+    s.pop(1);
+    s.pop(1);
+
+    s.print();
+
+    s.push(2, 26);
+    s.push(2, 27);
+    s.push(2, 28);
+
+    s.print();
+
+    s.push(3, 36);
+    s.push(3, 37);
+    s.push(3, 38);
+    s.push(3, 39);
+
+    s.print();
+}
+
+/*
+
+11, 12, 13, 14, 15, 0, 31, 32, 33, 34, 35, 0, 0, 0, 0, 25, 24, 23, 22, 21, 
+11, 12, 13, 14, 15, 16, 17, 18, 31, 32, 33, 34, 35, 0, 0, 25, 24, 23, 22, 21, 
+11, 12, 13, 14, 15, 0, 0, 0, 31, 32, 33, 34, 35, 0, 0, 25, 24, 23, 22, 21, 
+11, 12, 13, 14, 15, 0, 0, 31, 32, 33, 34, 35, 28, 27, 26, 25, 24, 23, 22, 21, 
+stack is full
+stack is full
+11, 12, 13, 14, 15, 31, 32, 33, 34, 35, 36, 37, 28, 27, 26, 25, 24, 23, 22, 21,
+
+*/

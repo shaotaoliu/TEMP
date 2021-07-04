@@ -1,0 +1,79 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+class Graph
+{
+    int V;    // No. of vertices
+    list<int> *adj;
+    bool reachableUtil(int s, int d, bool visited[]);
+
+    public:
+    Graph(int V);
+    void addEdge(int v, int w);
+    bool isReachable(int s, int d);
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w);
+}
+
+bool Graph::reachableUtil(int s, int d, bool visited[])
+{
+    if (s == d)
+    {
+        return true;
+    }
+
+    visited[s] = true;
+
+    for (int v : adj[s])
+    {
+        if (v == d || visited[v] == false && reachableUtil(v, d, visited))
+        {
+            return true;
+        }
+    }
+
+    visited[s] = false;
+    return false;
+}
+
+bool Graph::isReachable(int s, int d)
+{
+    bool visited[V];
+    memset(visited, false, sizeof(visited));
+
+    return reachableUtil(s, d, visited);
+}
+
+int main()
+{
+    Graph g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+
+    int u = 1, v = 3;
+    bool b = g.isReachable(u, v);
+    cout << (b ? "Yes" : "No") << endl;
+
+    u = 3, v = 1;
+    b = g.isReachable(u, v);
+    cout << (b ? "Yes" : "No") << endl;
+
+    return 0;
+}

@@ -1,0 +1,76 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+#define N 8
+
+int dx[] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+int dy[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+bool solveUtil(int board[][N], int x, int y, int k)
+{
+    if (k == N * N)
+    {
+        return true;
+    }
+
+    for (int i = 0; i < N; ++i)
+    {
+        int x2 = x + dx[i];
+        int y2 = y + dy[i];
+
+        if (x2 >= 0 && x2 < N && y2 >= 0 && y2 < N && board[x2][y2] == -1)
+        {
+            board[x2][y2] = k;
+
+            if (solveUtil(board, x2, y2, k+1))
+            {
+                return true;
+            }
+
+            board[x2][y2] = -1;
+        }
+    }
+
+    return false;
+}
+
+void solveKnight()
+{
+    int board[N][N];
+    memset(board, -1, sizeof(board));
+
+    board[0][0] = 0;
+    solveUtil(board, 0, 0, 1);
+
+    for (int i = 0; i < N; ++i)
+    {
+        for (int j = 0; j < N; ++j)
+        {
+            printf("%3d", board[i][j]);
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    solveKnight();
+    return 0;
+}
+
+/*
+
+ 0 59 38 33 30 17  8 63
+37 34 31 60  9 62 29 16
+58  1 36 39 32 27 18  7
+35 48 41 26 61 10 15 28
+42 57  2 49 40 23  6 19
+47 50 45 54 25 20 11 14
+56 43 52  3 22 13 24  5
+51 46 55 44 53  4 21 12
+
+*/

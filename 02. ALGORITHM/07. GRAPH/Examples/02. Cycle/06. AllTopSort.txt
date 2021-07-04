@@ -1,0 +1,118 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Graph
+{
+    int V;
+    list<int> *adj;
+    void findUtil(int indegree[], vector<int> &vec, bool visited[]);
+
+    public:
+    Graph(int V);
+    void addEdge(int v, int w);
+    void alltopologicalSort();
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w);
+}
+
+void Graph::findUtil(int indegree[], vector<int> &vec, bool visited[])
+{
+    if (vec.size() == V)
+    {
+        for (int i : vec)
+        {
+            printf("%d ", i);
+        }
+
+        printf("\n");
+        return;
+    }
+
+    for (int i = 0; i < V; ++i)
+    {
+        if (visited[i] == false && indegree[i] == 0)
+        {
+            vec.push_back(i);
+            visited[i] = true;
+
+            for (int j : adj[i])
+            {
+                indegree[j]--;
+            }
+
+            findUtil(indegree, vec, visited);
+
+            // Roll back the status
+            vec.pop_back();
+            visited[i] = false;
+
+            for (int j : adj[i])
+            {
+                indegree[j]++;
+            }
+        }
+    }
+}
+
+void Graph::alltopologicalSort()
+{
+    int indegree[V] = {0};
+    for (int i = 0; i < V; ++i)
+    {
+        for (int j : adj[i])
+        {
+            indegree[j]++;
+        }
+    }
+
+    bool visited[V];
+    memset(visited, false, sizeof(visited));
+
+    vector<int> vec;
+    findUtil(indegree, vec, visited);
+}
+
+int main()
+{
+    // Create a graph given in the above diagram
+    Graph g(6);
+    g.addEdge(5, 2);
+    g.addEdge(5, 0);
+    g.addEdge(4, 0);
+    g.addEdge(4, 1);
+    g.addEdge(2, 3);
+    g.addEdge(3, 1);
+
+    cout << "All Topological Sorts:\n";
+    g.alltopologicalSort();
+
+    return 0;
+}
+
+/*
+
+All Topological Sorts:
+4 5 0 2 3 1
+4 5 2 0 3 1
+4 5 2 3 0 1
+4 5 2 3 1 0
+5 2 3 4 0 1
+5 2 3 4 1 0
+5 2 4 0 3 1
+5 2 4 3 0 1
+5 2 4 3 1 0
+5 4 0 2 3 1
+5 4 2 0 3 1
+5 4 2 3 0 1
+5 4 2 3 1 0
+
+*/

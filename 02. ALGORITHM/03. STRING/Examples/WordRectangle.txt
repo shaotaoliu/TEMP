@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+bool validate(vector<string> vec[], vector<string> &rect, int length, int height)
+{
+    for (int i = 0; i < length; ++i)
+    {
+        string column = "";
+        for (int j = 0; j < height; ++j)
+        {
+            column += rect[j][i];
+        }
+
+        bool found = false;
+        for (string word : vec[height - 1])
+        {
+            if (word == column)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            return false;
+        }
+    }
+
+    for (int i = 0; i < height; ++i)
+    {
+        cout << rect[i] << endl;
+    }
+
+    return true;
+}
+
+// Back Tracking Algorithm
+bool check(vector<string> vec[], vector<string> &rect, int length, int height, int h)
+{
+    if (h == height)
+    {
+        return validate(vec, rect, length, height);
+    }
+
+    for (int i = 0; i < vec[length - 1].size(); ++i)
+    {
+        rect.push_back(vec[length - 1][i]);
+        if (check(vec, rect, length, height, h + 1))
+        {
+            return true;
+        }
+        rect.pop_back();
+    }
+
+    return false;
+}
+
+void find(string dict[], int n)
+{
+    // find the maximum length of the strings:
+    int maxlen = dict[0].length();
+    for (int i = 1; i < n; ++i)
+    {
+        // maxlen = max(maxlen, dict[i].length());
+        if (maxlen < dict[i].length())
+        {
+            maxlen = dict[i].length();
+        }
+    }
+
+    vector<string> vec[maxlen];
+    for (int i = 0; i < n; ++i)
+    {
+        vec[dict[i].length() - 1].push_back(dict[i]);
+    }
+
+    int maxArea = maxlen * maxlen;
+    for (int area = maxArea; area > 0; --area)
+    {
+        for (int i = 1; i <= maxlen; ++i)
+        {
+            if (area % i == 0)
+            {
+                int j = area / i;
+                if (j <= maxlen)
+                {
+                    if (vec[i - 1].size() >= j && vec[j - 1].size() >= i)
+                    {
+                        vector<string> rect;
+                        if (check(vec, rect, i, j, 0))
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+int main()
+{
+    string dict[] = {"eoen", "sister", "fat", "hello", "an", "tomorrow", "amie", "egg",
+                     "thank", "you", "monday", "tuesday", "amazon", "hzta", "plane", "hi",
+                     "fast", "rnrt", "peach", "tenant", "tasn", "sunday", "spring", "fall",
+                     "east", "father", "winter", "water", "store", "table", "sun", "moon",
+                     "t", "o", "m", "r", "w", "install", "saturday", "thursday"};
+
+    int n = sizeof(dict) / sizeof(dict[0]);
+    find(dict, n);
+}
+
+/*
+
+father
+amazon
+sister
+tenant
+
+*/

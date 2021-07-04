@@ -1,0 +1,71 @@
+#include<bits/stdc++.h>
+#include<iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left, *right;
+};
+
+struct Node* newNode(int data)
+{
+    struct Node* node = new Node;
+    node->data = data;
+    node->left = node->right = NULL;
+
+    return (node);
+}
+
+vector<int> height(Node *root)
+{
+    if (root == NULL)
+    {
+        return vector<int>();
+    }
+
+    vector<int> v1 = height(root->left);
+    vector<int> v2 = height(root->right);
+
+    if (v1.size() < v2.size())
+    {
+        v2.push_back(root->data);
+        return v2;
+    }
+
+    v1.push_back(root->data);
+    return v1;
+}
+
+void longestPath(Node* root)
+{
+    vector<int> v = height(root);
+
+    for (auto it = v.rbegin(); it != v.rend(); ++it)
+    {
+        printf("%d ", *it);
+    }
+}
+
+int main()
+{
+    struct Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->left = newNode(4);
+    root->left->right = newNode(5);
+    root->left->right->left = newNode(6);
+    root->left->right->right = newNode(7);
+    root->left->left->right = newNode(8);
+    root->left->left->right->left = newNode(9);
+
+    longestPath(root);
+
+    return 0;
+}
+
+/*
+
+1 2 4 8 9
+
+*/

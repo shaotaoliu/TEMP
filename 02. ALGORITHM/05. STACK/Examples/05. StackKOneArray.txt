@@ -1,0 +1,195 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class k_stack
+{
+    int *arr;               // the array
+    int size;               // the size of the array
+    int k;                  // the number of stacks
+
+    int *tops;              // the tops of each stack
+    int *blocks;            // blocks[i] = j means the i-th block belong to stack j
+    int blockSize;          // the size of a block
+
+    public:
+    k_stack(int n, int k, int blockSize)
+    {
+        arr = new int[n];
+        size = n;
+        this->k = k;
+        this->blockSize = blockSize;
+
+        tops = new int[k];
+        for (int i = 0; i < k; ++i)
+        {
+            tops[i] = -1;
+        }
+
+        int numOfBlocks = (n - 1) / blockSize + 1;
+        blocks = new int[numOfBlocks];
+
+        for (int i = 0; i < numOfBlocks; ++i)
+        {
+            blocks[i] = -1;
+        }
+    }
+
+    void push(int k, int x)
+    {
+        int newTop = tops[k-1] + 1;                        // new top
+        int i = newTop / blockSize;                        // the i-th block
+        int numOfBlocks = (size - 1) / blockSize + 1;      // number of blocks
+
+        while (newTop < size && blocks[i] != k && blocks[i] != -1)
+        {
+            ++i;
+            newTop = blockSize * i;
+        }
+
+        if (newTop >= size)
+        {
+            cout << "stack is full" << endl;
+            return;
+        }
+
+        arr[newTop] = x;           // store x
+        tops[k-1] = newTop;        // set the new top
+        blocks[i] = k;             // mark the block occupied by k
+    }
+
+    int pop(int k)
+    {
+        if (tops[k-1] == -1)
+        {
+            cout << "stack is empty" << endl;
+            return -1;
+        }
+
+        int x = arr[tops[k-1]];
+
+        // if current block is not empty:
+        if (tops[k-1] % blockSize > 0)
+        {
+            --tops[k-1];
+            return x;
+        }
+
+        int i = tops[k-1] / blockSize;
+        blocks[i] = -1;
+
+        // find next block occupied by k:
+        while (i >= 0 && blocks[i] != k)
+        {
+            --i;
+        }
+
+        tops[k-1] = (i < 0 ? -1 : blockSize * (i + 1) - 1);
+        return x;
+    }
+
+    void print()
+    {
+        for (int i = 0; i < 20; ++i)
+        {
+            printf("%d, ", arr[i]);
+        }
+
+        cout << endl;
+        int numOfBlocks = (size - 1) / blockSize + 1;
+
+        for (int i = 0; i < numOfBlocks; ++i)
+        {
+            printf("%d, ", blocks[i]);
+        }
+
+        cout << endl;
+        for (int i = 0; i < k; ++i)
+        {
+            printf("%d, ", tops[i]);
+        }
+    }
+};
+
+int main()
+{
+    k_stack s(20, 3, 3);
+    s.push(1, 11);
+    s.push(1, 12);
+    s.push(1, 13);
+    s.push(1, 14);
+    s.push(1, 15);
+
+    s.push(2, 21);
+    s.push(2, 22);
+    s.push(2, 23);
+    s.push(2, 24);
+    s.push(2, 25);
+
+    s.push(3, 31);
+    s.push(3, 32);
+    s.push(3, 33);
+    s.push(3, 34);
+    s.push(3, 35);
+
+    s.push(1, 16);
+    s.push(1, 17);
+    s.push(1, 18);
+    s.push(1, 19);
+    s.push(1, 20);
+
+    s.print();
+    cout << "\n--------\n";
+
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1);
+
+    cout << endl;
+
+    cout << s.pop(2) << ", ";
+    cout << s.pop(2) << ", ";
+    cout << s.pop(2) << ", ";
+    cout << s.pop(2) << ", ";
+    cout << s.pop(2);
+
+    cout << endl;
+
+    cout << s.pop(3) << ", ";
+    cout << s.pop(3) << ", ";
+    cout << s.pop(3) << ", ";
+    cout << s.pop(3) << ", ";
+    cout << s.pop(3);
+
+    cout << endl;
+
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1) << ", ";
+    cout << s.pop(1);
+
+    cout << endl;
+    s.print();
+}
+
+/*
+
+stack is full
+stack is full
+11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 0, 31, 32, 33, 34, 35, 0, 17, 18,
+1, 1, 2, 2, 3, 3, 1,
+19, 10, 16,
+--------
+18, 17, 16, 15, 14
+25, 24, 23, 22, 21
+35, 34, 33, 32, 31
+13, 12, 11, stack is empty
+-1, stack is empty
+-1
+11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 0, 31, 32, 33, 34, 35, 0, 17, 18,
+-1, -1, -1, -1, -1, -1, -1,
+-1, -1, -1,
+
+*/

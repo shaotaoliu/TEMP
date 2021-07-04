@@ -1,0 +1,75 @@
+#include <iostream>
+#include "bits/stdc++.h"
+using namespace std;
+
+struct Box
+{
+    int height, width, depth;
+};
+
+int compare(Box a, Box b)
+{
+    return a.width * a.depth > b.width * b.depth;     // descending order
+}
+
+int maxHeight(Box arr[], int n)
+{
+    Box aux[n * 3];
+
+    for (int i = 0; i < n; ++i)
+    {
+        aux[i * 3].height = arr[i].height;
+        aux[i * 3].depth = max(arr[i].depth, arr[i].width);
+        aux[i * 3].width = min(arr[i].depth, arr[i].width);
+
+        aux[i * 3 + 1].height = arr[i].width;
+        aux[i * 3 + 1].depth = max(arr[i].height, arr[i].depth);
+        aux[i * 3 + 1].width = min(arr[i].height, arr[i].depth);
+
+        aux[i * 3 + 2].height = arr[i].depth;
+        aux[i * 3 + 2].depth = max(arr[i].height, arr[i].width);
+        aux[i * 3 + 2].width = min(arr[i].height, arr[i].width);
+    }
+
+    n *= 3;
+    sort(aux, aux + n, compare);
+
+    int dp[n];
+    for (int i = 0; i < n; ++i)
+    {
+        dp[i] = aux[i].height;
+    }
+
+    for (int i = 1; i < n; ++i)
+    {
+        for (int j = 0; j < i; ++j)
+        {
+            if (aux[i].width < aux[j].width && aux[i].depth < aux[j].depth && dp[i] < dp[j] + aux[i].height)
+            {
+                dp[i] = dp[j] + aux[i].height;
+            }
+        }
+    }
+
+    int maxx = INT_MIN;
+    for (int i = 0; i < n; ++i)
+    {
+        maxx = max(maxx, dp[i]);
+    }
+
+    return maxx;
+}
+
+int main()
+{
+    Box arr[] = { {4, 6, 7}, {1, 2, 3}, {4, 5, 6}, {10, 12, 32} };
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    printf("The maximum height: %d\n", maxHeight(arr, n) );
+}
+
+/*
+
+The maximum height: 60
+
+*/

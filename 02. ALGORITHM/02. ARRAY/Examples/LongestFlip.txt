@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+
+int getLongest(int x)
+{
+    // If all bits are 1:
+    if (~x == 0)
+    {
+        return sizeof(int) * 8;
+    }
+
+    int curr = 0;
+    int prev = 0;
+    int maxx = 0;
+
+    while (x != 0)
+    {
+        if ((x & 1) == 1)
+        {
+            ++curr;
+        }
+        else
+        {
+            if ((x & 2) == 0)
+            {
+                prev = 0;             // x = "xxxxxx00"
+            }
+            else
+            {
+                prev = curr;          // x = "xxxxxx10"
+            }
+
+            curr = 0;
+        }
+
+        maxx = max(prev + curr + 1, maxx);
+        x = x >> 1;
+    }
+
+    return maxx;
+}
+
+int main()
+{
+    cout << getLongest(13);
+    cout << endl;
+
+    cout << getLongest(1775);
+    cout << endl;
+
+    cout << getLongest(15);
+    return 0;
+}
+
+/*
+
+4
+8
+5
+
+*/

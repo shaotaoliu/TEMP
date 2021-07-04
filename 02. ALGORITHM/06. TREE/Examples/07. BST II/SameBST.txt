@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool BSTUtil(int a[], int b[], int n, int startA, int startB, int min, int max)
+{
+    if (startA == n && startB == n)
+    {
+        return true;
+    }
+
+    if (startA == n || startB == n)
+    {
+        return false;
+    }
+
+    if (a[startA] != b[startB])
+    {
+        return false;
+    }
+
+    // find the left child of a
+    int la = startA + 1;
+    while (la < n && (a[la] > a[startA] || a[la] < min))
+    {
+        ++la;
+    }
+
+    // find the right child of a
+    int ra = startA + 1;
+    while (ra < n && (a[ra] < a[startA] || a[ra] > max))
+    {
+        ++ra;
+    }
+
+    // find the left child of b
+    int lb = startB + 1;
+    while (lb < n && (b[lb] > b[startB] || b[lb] < min))
+    {
+        ++lb;
+    }
+
+    // find the right child of b
+    int rb = startB + 1;
+    while (rb < n && (b[rb] < b[startB] || b[rb] > max))
+    {
+        ++rb;
+    }
+
+    return BSTUtil(a, b, n, la, lb, min, a[startA])
+    && BSTUtil(a, b, n, ra, rb, a[startA], max);
+}
+
+bool sameBST(int a[], int b[], int n)
+{
+    return BSTUtil(a, b, n, 0, 0, INT_MIN, INT_MAX);
+}
+
+int main()
+{
+    int a[] = {8, 3, 6, 1, 4, 7, 10, 14, 13};
+    int b[] = {8, 10, 14, 3, 6, 4, 1, 7, 13};
+
+    //int a[] = {6, 3, 5, 1, 8, 9};
+    //int b[] = {6, 8, 9, 3, 1, 5};
+
+    int n = sizeof(a) / sizeof(a[0]);
+    if (sameBST(a, b, n))
+    {
+        cout << "Same";
+    }
+    else
+    {
+        cout << "Not Same";
+    }
+}
+
+/*
+
+Same
+
+*/

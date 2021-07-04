@@ -1,0 +1,72 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+int combine(unordered_map<string, int> &m, unordered_map<int, unordered_set<int>> &m2, string str, int i)
+{
+    if (m.find(str) != m.end())
+    {
+        for (int j : m2[i])
+        {
+            m2[m[str]].insert(j);
+        }
+
+        m2.erase(i);
+        return m[str];
+    }
+
+    return i;
+}
+
+void find(string a[][3], int n)
+{
+    unordered_map<string, int> m;
+    unordered_map<int, unordered_set<int>> m2;
+    int index;
+
+    for (int i = 0; i < n; ++i)
+    {
+        m2[i].insert(i);
+
+        index = combine(m, m2, a[i][0], i);
+        index = combine(m, m2, a[i][1], index);
+        index = combine(m, m2, a[i][2], index);
+
+        m[a[i][0]] = index;
+        m[a[i][1]] = index;
+        m[a[i][2]] = index;
+    }
+
+    for (auto p : m2)
+    {
+        for (int i : p.second)
+        {
+            printf("%d ", i);
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    string arr[][3] = {{"Keven", "00000000", "keven@yahoo.com"},
+                       {"Mike", "11111111", "mike@amazon.com"},
+                       {"Andy", "11111111", "keven@yahoo.com"},
+                       {"Lucky", "lucky@gmail.com", "123456"},
+                       {"Bruce", "22222222", "bruce@gmail.com"},
+                       {"Chris", "33333333", "chris@amazon.com"},
+                       {"Lucky", "22222222", "chris@amazon.com"}};
+
+    int n = 7;
+    find(arr, n);
+}
+
+/*
+
+6 4 5 3
+1 0 2
+
+*/

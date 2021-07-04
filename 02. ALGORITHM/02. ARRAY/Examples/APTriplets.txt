@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void printAllAPTriplets(int a[], int n)
+{
+    for (int i = 0; i < n-2; ++i)
+    {
+        unordered_set<int> s;
+
+        for (int j = i+1; j < n; ++j)
+        {
+            int sum = a[i] + a[j];
+
+            if (sum % 2 == 0)
+            {
+                int d = sum / 2;
+                if (s.find(d) != s.end())
+                {
+                    printf("%d, %d, %d\n", a[i], d, a[j]);
+                }
+            }
+
+            s.insert(a[j]);
+        }
+    }
+}
+
+int main()
+{
+    int arr[] = { 2, 6, 9, 12, 17, 22, 31, 32, 35, 42 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    printAllAPTriplets(arr, n);
+}
+
+/*
+
+2, 12, 22
+2, 17, 32
+2, 22, 42
+6, 9, 12
+9, 22, 35
+12, 17, 22
+12, 22, 32
+22, 32, 42
+
+*/

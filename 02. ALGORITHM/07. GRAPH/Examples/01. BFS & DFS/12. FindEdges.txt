@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <bits/stdc++.h>
+#include <map>
+#include <stack>
+using namespace std;
+
+int findUtil(int edge[][2], int E, bool visit[], int u, int dest, int k)
+{
+    if (u == dest)
+    {
+        return k;
+    }
+
+    visit[u] = true;
+    int minx = INT_MAX;
+
+    for (int i = 0; i < E; ++i)
+    {
+        if (edge[i][0] == u && visit[edge[i][1]] == false)
+        {
+            minx = min(minx, findUtil(edge, E, visit, edge[i][1], dest, k));
+        }
+        else if (edge[i][1] == u && visit[edge[i][0]] == false)
+        {
+            minx = min(minx, findUtil(edge, E, visit, edge[i][0], dest, k+1));
+        }
+    }
+
+    visit[u] = false;
+    return minx;
+}
+
+int findEdges(int edge[][2], int E, int V, int src, int dest)
+{
+    bool visit[V];
+    memset(visit, false, sizeof(visit));
+
+    return findUtil(edge, E, visit, src, dest, 0);
+}
+
+int main()
+{
+    int edge[][2] = {{0, 1}, {2, 1}, {2, 3}, {5, 1}, {4, 5}, {6, 4}, {6, 3}};
+    int E = sizeof(edge) / sizeof(edge[0]);
+    int V = 7;
+
+    int d = findEdges(edge, E, V, 0, 6);
+    cout << "Edges: " << d << endl;
+}
+
+/*
+
+2
+
+*/

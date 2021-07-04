@@ -1,0 +1,149 @@
+#include <iostream>
+#include <list>
+#include <vector>
+#include <queue>
+using namespace std;
+
+class Graph
+{
+    int V;
+    list<int> *adj;
+
+    public:
+    Graph(int V);
+    void addEdge(int u, int v);
+    void printLeftPath(int parent[], int u);
+    void printRightPath(int parent[], int u);
+    int BFS(queue<int> &q, int visited[], int by, int parent[]);
+    int biSearch(int s, int t);
+};
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+};
+
+void Graph::addEdge(int u, int v)
+{
+    this->adj[u].push_back(v);
+    this->adj[v].push_back(u);
+};
+
+int Graph::BFS(queue<int> &q, int visited[], int by, int parent[])
+{
+    int u = q.front();
+    q.pop();
+
+    for (int v : adj[u])
+    {
+        if (visited[v] == 3 - by)         // if v has been visited by another side
+        {
+            return v;
+        }
+        else if (visited[v] == 0)
+        {
+            q.push(v);
+            visited[v] = by;
+            parent[v] = u;
+        }
+    }
+
+    return -1;
+}
+
+void Graph::printLeftPath(int parent[], int u)
+{
+    if (parent[u] != -1)
+    {
+        printLeftPath(parent, parent[u]);
+    }
+
+    printf("%d ", u);
+}
+
+void Graph::printRightPath(int parent[], int v)
+{
+    printf("%d ", v);
+
+    if (parent[v] != -1)
+    {
+        printRightPath(parent, parent[v]);
+    }
+}
+
+int Graph::biSearch(int s, int t)
+{
+    int visited[V];               // 0: unvisited, 1: visited by 1, 2: visited by 2
+    int parent[V];
+
+    for (int i = 0; i < V; ++i)
+    {
+        visited[i] = 0;
+        parent[i] = -1;
+    }
+
+    queue<int> q1, q2;
+
+    q1.push(s);
+    visited[s] = 1;
+
+    q2.push(t);
+    visited[t] = 2;
+
+    while (!q1.empty() && !q2.empty())
+    {
+        int u = q1.front();
+        int v = BFS(q1, visited, 1, parent);
+
+        if (v != -1)
+        {
+            printLeftPath(parent, u);
+            printRightPath(parent, v);
+            return v;
+        }
+
+        u = q2.front();
+        v = BFS(q2, visited, 2, parent);
+
+        if (v != -1)
+        {
+            printLeftPath(parent, v);
+            printRightPath(parent, u);
+            return v;
+        }
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int n = 15;
+    int s = 0;
+    int t = 14;
+
+    Graph g(n);
+    g.addEdge(0, 4);
+    g.addEdge(1, 4);
+    g.addEdge(2, 5);
+    g.addEdge(3, 5);
+    g.addEdge(4, 6);
+    g.addEdge(5, 6);
+    g.addEdge(6, 7);
+    g.addEdge(7, 8);
+    g.addEdge(8, 9);
+    g.addEdge(8, 10);
+    g.addEdge(9, 11);
+    g.addEdge(9, 12);
+    g.addEdge(10, 13);
+    g.addEdge(10, 14);
+
+    g.biSearch(s, t);
+}
+
+/*
+
+0 4 6 7 8 10 14
+
+*/

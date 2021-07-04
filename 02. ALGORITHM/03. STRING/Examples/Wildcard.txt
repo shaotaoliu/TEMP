@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool match(char *txt, char *pat)
+{
+    if (*txt == '\0')
+    {
+        while (*pat == '*')
+        {
+            ++pat;
+        }
+
+        return *pat == '\0';
+    }
+    else if (*pat == '\0')
+    {
+        return false;
+    }
+
+    if (*txt == *pat || *pat == '?')
+    {
+        return match(txt + 1, pat + 1);
+    }
+
+    if (*pat == '*')
+    {
+        return match(txt, pat + 1) || match(txt + 1, pat);
+    }
+
+    return false;
+}
+
+void test(char *pat, char *txt)
+{
+    match(txt, pat) ? puts("Yes") : puts("No");
+}
+
+int main()
+{
+    test("g*ks", "geeks");              // Yes
+    test("ge?ks*", "geeksforgeeks");    // Yes
+    test("g*k", "gee");                 // No because 'k' is not in second
+    test("*pqrs", "pqrst");             // No because 't' is not in first
+    test("abc*bcd", "abcdhghgbcd");     // Yes
+    test("abc*c?d", "abcd");            // No because second must have 2 instances of 'c'
+    test("*c*d", "abcd");               // Yes
+    test("*?c*d", "abcd");              // Yes
+}
+
+/*
+
+Yes
+Yes
+No
+No
+Yes
+No
+Yes
+Yes
+
+*/
